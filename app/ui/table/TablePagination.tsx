@@ -30,7 +30,7 @@ export default function TablePagination({
     : 1;
 
   return (
-    <div className="w-full flex gap-2 items-center">
+    <div className="flex gap-2 items-center">
       <Select<number>
         value={
           searchParams.get("limit")
@@ -51,6 +51,23 @@ export default function TablePagination({
         }}
         className="w-20"
       />
+      {page > 1 && (
+        <Button
+          type="link"
+          onClick={() => {
+            router.push(
+              pathname +
+                "?" +
+                createQueryString({
+                  startKey: "",
+                  page: 1,
+                }),
+            );
+          }}
+        >
+          First page
+        </Button>
+      )}
       <div>Page {page}</div>
       {LastEvaluatedKey && (
         <Button

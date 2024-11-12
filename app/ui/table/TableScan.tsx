@@ -115,21 +115,24 @@ export default function TableScan({
     <div className="flex flex-col gap-2">
       {/* <div className="border relative rounded-xl">
         <div className="shadow-sm overflow-hidden my-4"> */}
-      <div>
-        {gsiIndexes.map((index) => (
-          <Checkbox
-            key={index.IndexName}
-            checked={!hideGSIIndexes[index.IndexName!]}
-            onChange={(e) =>
-              setHideGSIIndexes((prev) => ({
-                ...prev,
-                [index.IndexName!]: !e.target.checked,
-              }))
-            }
-          >
-            {index.IndexName}
-          </Checkbox>
-        ))}
+      <div className="flex justify-between items-center">
+        <div>
+          {gsiIndexes.map((index) => (
+            <Checkbox
+              key={index.IndexName}
+              checked={!hideGSIIndexes[index.IndexName!]}
+              onChange={(e) =>
+                setHideGSIIndexes((prev) => ({
+                  ...prev,
+                  [index.IndexName!]: !e.target.checked,
+                }))
+              }
+            >
+              {index.IndexName}
+            </Checkbox>
+          ))}
+        </div>
+        <TablePagination LastEvaluatedKey={data.LastEvaluatedKey} />
       </div>
       <table className="border-collapse table-auto w-full text-sm">
         <thead className="bg-slate-100">
