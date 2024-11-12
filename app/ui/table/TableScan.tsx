@@ -112,6 +112,34 @@ export default function TableScan({
   ];
   const keyFieldsSet = new Set(keyFields);
 
+  // Find fields appearing in all items and not in the key fields
+  // This is used to display the attributes
+  const allFields = new Set<string>();
+  if (data.Items && data.Items.length > 0) {
+    Object.keys(data.Items![0]).forEach((key) => {
+      if (!keyFieldsSet.has(key)) {
+        allFields.add(key);
+      }
+    });
+
+    data.Items.slice(1).forEach((item) => {
+      // Remove fields that are not in the current item
+      allFields.forEach((field) => {
+        if (!(field in item)) {
+          allFields.delete(field);
+        }
+      });
+    });
+  }
+  const attributes = Array.from(allFields);
+  const attributesColumns = attributes.map((field) => ({
+    title: field,
+    dataIndex: field,
+    render: (value: AttributeValue) => <RecordValue value={value} />,
+  }));
+
+  const ignoreFields = new Set([...keyFields, ...attributes]);
+
   const columns: MyColumn[] = [
     {
       title: `${pk} (Partition Key)`,
@@ -138,10 +166,11 @@ export default function TableScan({
       noWrap: true,
     },
     ...gsiColumns,
+    ...attributesColumns,
     {
       title: "Attributes",
       render: (value: Record<string, AttributeValue>) => (
-        <AttributesView ignoreFields={keyFieldsSet} item={value} />
+        <AttributesView ignoreFields={ignoreFields} item={value} />
       ),
     },
   ];
