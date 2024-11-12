@@ -1,13 +1,20 @@
 import { AttributeValue } from "@aws-sdk/client-dynamodb";
 
+function cutString(str: string, length: number) {
+  if (str.length > length) {
+    return str.slice(0, length) + "...";
+  }
+  return str;
+}
+
 export default function RecordValue({ value }: { value?: AttributeValue }) {
   if (typeof value === "undefined") {
-    return <span className="text-orange-900">undefined</span>;
+    return <center className="text-gray-300">-</center>;
   }
   if (value.S) {
     return (
-      <span className="truncate" title={value.S as string}>
-        {value.S}
+      <span className="truncate max-w-28" title={value.S as string}>
+        {cutString(value.S, 28)}
       </span>
     );
   }
