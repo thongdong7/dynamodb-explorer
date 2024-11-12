@@ -1,42 +1,20 @@
+import { useNav } from "@/app/lib/hook/nav";
 import { AttributeValue } from "@aws-sdk/client-dynamodb";
 import { Button, Select } from "antd";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { parse } from "path";
-import { useCallback } from "react";
 
 export default function TablePagination({
   LastEvaluatedKey,
 }: {
   LastEvaluatedKey?: Record<string, AttributeValue>;
 }) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const { changeParams, getNumberParam } = useNav();
 
-  const createQueryString = useCallback(
-    (changes: Record<string, string | number>) => {
-      const params = new URLSearchParams(searchParams.toString());
-      for (const [name, value] of Object.entries(changes)) {
-        params.set(name, String(value));
-      }
-
-      return params.toString();
-    },
-    [searchParams],
-  );
-
-  const page = searchParams.get("page")
-    ? parseInt(searchParams.get("page")!, 10)
-    : 1;
+  const page = getNumberParam("page", 1);
 
   return (
     <div className="flex gap-2 items-center">
       <Select<number>
-        value={
-          searchParams.get("limit")
-            ? parseInt(searchParams.get("limit")!, 10)
-            : 10
-        }
+        value={getNumberParam("limit", 10)}
         options={[
           { label: "10", value: 10 },
           { label: "25", value: 25 },
@@ -47,7 +25,7 @@ export default function TablePagination({
           { label: "1000", value: 1000 },
         ]}
         onChange={(value) => {
-          router.push(pathname + "?" + createQueryString({ limit: value }));
+          changeParams({ limit: value });
         }}
         className="w-20"
       />
@@ -55,14 +33,10 @@ export default function TablePagination({
         <Button
           type="link"
           onClick={() => {
-            router.push(
-              pathname +
-                "?" +
-                createQueryString({
-                  startKey: "",
-                  page: 1,
-                }),
-            );
+            changeParams({
+              startKey: "",
+              page: 1,
+            });
           }}
         >
           First page
@@ -73,14 +47,10 @@ export default function TablePagination({
         <Button
           type="link"
           onClick={() => {
-            router.push(
-              pathname +
-                "?" +
-                createQueryString({
-                  startKey: JSON.stringify(LastEvaluatedKey),
-                  page: page + 1,
-                }),
-            );
+            changeParams({
+              startKey: JSON.stringify(LastEvaluatedKey),
+              page: page + 1,
+            });
           }}
         >
           Next page

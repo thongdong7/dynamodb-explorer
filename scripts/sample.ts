@@ -1,5 +1,6 @@
 import { getClient } from "@/app/lib/utils/clientUtils";
 import { PutItemCommand } from "@aws-sdk/client-dynamodb";
+import { ulid } from "ulid";
 
 async function createSample() {
   const client = getClient();
@@ -17,6 +18,25 @@ async function createSample() {
       },
     });
     await client.send(command);
+
+    // Create sample posts
+    for (let j = 0; j < 10; j++) {
+      const postId = ulid();
+      await client.send(
+        new PutItemCommand({
+          TableName: "AppTest",
+          Item: {
+            pk: { S: `User#${i}` },
+            sk: { S: `Post#${postId}` },
+            GSI1PK: { S: `Post#${postId}` },
+            GSI1SK: { S: `Post#${postId}` },
+            id: { S: postId },
+            title: { S: `Post ${j}` },
+            content: { S: `Post content ${j}` },
+          },
+        }),
+      );
+    }
   }
 }
 

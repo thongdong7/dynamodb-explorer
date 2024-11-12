@@ -1,35 +1,60 @@
 import { AttributeValue } from "@aws-sdk/client-dynamodb";
-import { values } from "lodash";
 
 export default function RecordValue({ value }: { value?: AttributeValue }) {
   if (typeof value === "undefined") {
-    return <div className="text-orange-900">undefined</div>;
+    return <span className="text-orange-900">undefined</span>;
   }
   if (value.S) {
     return (
-      <div className="text-green-600" title={value.S as string}>
+      <span className="truncate" title={value.S as string}>
         {value.S}
-      </div>
+      </span>
     );
   }
   if (value.N) {
-    return <div title={value.N}>{value.N}</div>;
+    return <span title={value.N}>{value.N}</span>;
   }
   if (value.B) {
-    return <div>{value.B}</div>;
+    return <span>{value.B}</span>;
   }
   if (value.BOOL) {
-    return <div>{value.BOOL}</div>;
+    return <span>{value.BOOL}</span>;
   }
   if (value.NULL) {
-    return <div>null</div>;
+    return <span>null</span>;
   }
   if (value.L) {
-    return <div>{JSON.stringify(value.L)}</div>;
+    return <span>{JSON.stringify(value.L)}</span>;
   }
   if (value.M) {
-    return <div>{JSON.stringify(value.M)}</div>;
+    return <span>{JSON.stringify(value.M)}</span>;
   }
 
-  return <div>{JSON.stringify(value)}</div>;
+  return <span>{JSON.stringify(value)}</span>;
+}
+
+export function getValue(value: AttributeValue) {
+  if (value.S) {
+    return value.S;
+  }
+  if (value.N) {
+    return value.N;
+  }
+  if (value.B) {
+    return value.B;
+  }
+  if (value.BOOL) {
+    return value.BOOL;
+  }
+  if (value.NULL) {
+    return null;
+  }
+  if (value.L) {
+    return value.L;
+  }
+  if (value.M) {
+    return value.M;
+  }
+
+  return value;
 }

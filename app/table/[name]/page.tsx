@@ -1,5 +1,5 @@
 import { describeTable } from "@/app/lib/actions/tables/describe";
-import { scanTable } from "@/app/lib/actions/tables/list";
+import { queryTable, scanTable } from "@/app/lib/actions/tables/list";
 import { createPage } from "@/app/lib/utils/createPageUtils";
 import TableScan from "@/app/ui/table/TableScan";
 import { Breadcrumb } from "antd";
@@ -33,6 +33,9 @@ export default createPage()
       searchParams: z.object({
         limit: z.coerce.number().optional().default(10),
         startKey: z.string().optional(),
+        indexName: z.string().optional(),
+        pkField: z.string().optional(),
+        pkValue: z.string().optional(),
       }),
     }),
   )
@@ -40,16 +43,25 @@ export default createPage()
     async ({
       values: {
         params: { name },
-        searchParams: { limit, startKey },
+        searchParams: { limit, startKey, indexName, pkField, pkValue },
       },
     }) => {
-      const [table, data] = await Promise.all([
-        describeTable(name),
-        scanTable(name, {
-          Limit: limit,
-          ExclusiveStartKey: startKey ? JSON.parse(startKey) : undefined,
-        }),
-      ]);
+      const dataFn =
+        pkField && pkValue
+          ? queryTable(name, {
+              IndexName: indexName,
+              KeyConditionExpression: `${pkField} = :pk`,
+              ExpressionAttributeValues: {
+                ":pk": { S: pkValue },
+              },
+              Limit: limit,
+              ExclusiveStartKey: startKey ? JSON.parse(startKey) : undefined,
+            })
+          : scanTable(name, {
+              Limit: limit,
+              ExclusiveStartKey: startKey ? JSON.parse(startKey) : undefined,
+            });
+      const [table, data] = await Promise.all([describeTable(name), dataFn]);
 
       return (
         <div>
