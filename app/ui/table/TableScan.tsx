@@ -115,6 +115,7 @@ export default function TableScan({
   // Find fields appearing in all items and not in the key fields
   // This is used to display the attributes
   const allFields = new Set<string>();
+  let hasOtherAttributes = false;
   if (data.Items && data.Items.length > 0) {
     Object.keys(data.Items![0]).forEach((key) => {
       if (!keyFieldsSet.has(key)) {
@@ -127,6 +128,7 @@ export default function TableScan({
       allFields.forEach((field) => {
         if (!(field in item)) {
           allFields.delete(field);
+          hasOtherAttributes = true;
         }
       });
     });
@@ -169,6 +171,7 @@ export default function TableScan({
     ...attributesColumns,
     {
       title: "Attributes",
+      hidden: !hasOtherAttributes,
       render: (value: Record<string, AttributeValue>) => (
         <AttributesView ignoreFields={ignoreFields} item={value} />
       ),

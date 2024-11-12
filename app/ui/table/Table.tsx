@@ -18,11 +18,12 @@ export default function Table<RecordType>({
     <table className="border-collapse min-w-full text-sm">
       <thead className="bg-slate-100 sticky top-0 z-10">
         <tr>
-          {columns.map(({ title, freeze }, i) => (
+          {columns.map(({ title, freeze, hidden }, i) => (
             <th
               key={i}
               className={clsx("border-b p-2 text-slate-400 text-left", {
                 "sticky left-0 bg-gray-200": freeze,
+                hidden: hidden,
               })}
             >
               {title as ReactNode}
@@ -47,6 +48,7 @@ export default function Table<RecordType>({
                           column.freeze,
                         "left-0": column.freeze,
                         "whitespace-nowrap": column.noWrap,
+                        hidden: column.hidden,
                       },
                     )}
                   >

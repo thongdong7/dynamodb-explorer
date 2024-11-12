@@ -31,7 +31,7 @@ export default createPage()
         name: z.string(),
       }),
       searchParams: z.object({
-        limit: z.coerce.number().optional().default(10),
+        limit: z.coerce.number().optional().default(25),
         startKey: z.string().optional(),
         indexName: z.string().optional(),
         pkField: z.string().optional(),

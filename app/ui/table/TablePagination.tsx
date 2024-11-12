@@ -14,7 +14,7 @@ export default function TablePagination({
   return (
     <div className="flex gap-2 items-center">
       <Select<number>
-        value={getNumberParam("limit", 10)}
+        value={getNumberParam("limit", 25)}
         options={[
           { label: "10", value: 10 },
           { label: "25", value: 25 },
