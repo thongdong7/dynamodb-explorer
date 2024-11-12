@@ -1,4 +1,4 @@
-import { ColumnType } from "antd/es/table";
+import { ColumnType, TableProps } from "antd/es/table";
 import clsx from "clsx";
 import { ReactNode } from "react";
 
@@ -10,9 +10,11 @@ export type Column<RecordType> = ColumnType<RecordType> & {
 export default function Table<RecordType>({
   columns,
   dataSource,
+  onRow,
 }: {
   columns: Column<RecordType>[];
   dataSource?: RecordType[];
+  onRow?: TableProps<RecordType>["onRow"];
 }) {
   return (
     <table className="border-collapse min-w-full text-sm">
@@ -36,7 +38,13 @@ export default function Table<RecordType>({
           <div>No data</div>
         ) : (
           dataSource.map((item, i) => (
-            <tr key={i} className="hover:bg-slate-50 group">
+            <tr
+              key={i}
+              className={clsx("hover:bg-slate-50 group", {
+                "cursor-pointer": Boolean(onRow?.(item, i).onClick),
+              })}
+              onClick={(e) => onRow?.(item, i).onClick?.(e)}
+            >
               {columns.map((column, j) => {
                 return (
                   <td

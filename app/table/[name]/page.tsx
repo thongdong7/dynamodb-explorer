@@ -3,26 +3,7 @@ import { queryTable, scanTable } from "@/app/lib/actions/tables/list";
 import { createPage } from "@/app/lib/utils/createPageUtils";
 import TableScan from "@/app/ui/table/TableScan";
 import { Breadcrumb } from "antd";
-import { values } from "lodash";
 import { z } from "zod";
-
-// export default async function Page({
-//   params: { name },
-// }: {
-//   params: { name: string };
-// }) {
-//   const [table, data] = await Promise.all([
-//     describeTable(name),
-//     scanTable(name),
-//   ]);
-
-//   return (
-//     <div>
-//       <Breadcrumb items={[{ title: "Home", href: "/" }, { title: name }]} />
-//       <TableScan table={table} data={data} />
-//     </div>
-//   );
-// }
 
 export default createPage()
   .schema(

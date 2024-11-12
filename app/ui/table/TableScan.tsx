@@ -16,6 +16,8 @@ import AttributesView from "./AttributesView";
 import RecordValue, { getValue } from "./RecordValue";
 import Table, { Column } from "./Table";
 import TablePagination from "./TablePagination";
+import { useOpen } from "@/app/lib/hook/open";
+import ItemViewerDrawer from "./ItemViewerDrawer";
 
 function keySchemaToColumns(item: GlobalSecondaryIndexDescription): MyColumn[] {
   if (!item.KeySchema) {
@@ -183,6 +185,10 @@ export default function TableScan({
   const pkValue = searchParams.get("pkValue");
 
   const { changeParams } = useNav();
+  const drawer = useOpen();
+  const [selectItem, setSelectItem] = useState<
+    Record<string, AttributeValue> | undefined
+  >(undefined);
   return (
     <div className="flex flex-col gap-2">
       <div className="flex justify-between items-center">
@@ -216,7 +222,21 @@ export default function TableScan({
         </div>
         <TablePagination LastEvaluatedKey={data.LastEvaluatedKey} />
       </div>
-      <Table columns={columns} dataSource={data.Items} />
+
+      <Table
+        columns={columns}
+        dataSource={data.Items}
+        onRow={(record, rowIndex) => {
+          return {
+            onClick: (event) => {
+              setSelectItem(record);
+              drawer.onOpen();
+            },
+          };
+        }}
+      />
+
+      <ItemViewerDrawer item={selectItem} {...drawer} />
 
       <TablePagination LastEvaluatedKey={data.LastEvaluatedKey} />
     </div>
