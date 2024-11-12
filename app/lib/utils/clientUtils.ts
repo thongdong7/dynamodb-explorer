@@ -1,4 +1,5 @@
 import { DynamoDBClient, ListBackupsCommand } from "@aws-sdk/client-dynamodb";
+import clc from "cli-color";
 
 interface DynamoConfig {
   endpoint: string;

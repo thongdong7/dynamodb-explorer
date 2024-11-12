@@ -12,6 +12,7 @@ import { uniq } from "lodash";
 import RecordValue from "./RecordValue";
 import { ReactNode, useState } from "react";
 import AttributesView from "./AttributesView";
+import TablePagination from "./TablePagination";
 
 function keySchemaToColumns(
   keySchema: KeySchemaElement[],
@@ -111,28 +112,30 @@ export default function TableScan({
     },
   ];
   return (
-    <div>
+    <div className="flex flex-col gap-2">
       {/* <div className="border relative rounded-xl">
         <div className="shadow-sm overflow-hidden my-4"> */}
-      {gsiIndexes.map((index) => (
-        <Checkbox
-          key={index.IndexName}
-          checked={!hideGSIIndexes[index.IndexName!]}
-          onChange={(e) =>
-            setHideGSIIndexes((prev) => ({
-              ...prev,
-              [index.IndexName!]: !e.target.checked,
-            }))
-          }
-        >
-          {index.IndexName}
-        </Checkbox>
-      ))}
+      <div>
+        {gsiIndexes.map((index) => (
+          <Checkbox
+            key={index.IndexName}
+            checked={!hideGSIIndexes[index.IndexName!]}
+            onChange={(e) =>
+              setHideGSIIndexes((prev) => ({
+                ...prev,
+                [index.IndexName!]: !e.target.checked,
+              }))
+            }
+          >
+            {index.IndexName}
+          </Checkbox>
+        ))}
+      </div>
       <table className="border-collapse table-auto w-full text-sm">
         <thead className="bg-slate-100">
           <tr>
             {columns.map(({ title }, i) => (
-              <th key={i} className="border-b p-2 text-slate-400 text-left">
+              <th key={i} className="border-b py-2 text-slate-400 text-left">
                 {title as ReactNode}
               </th>
             ))}
@@ -149,7 +152,7 @@ export default function TableScan({
                   return (
                     <td
                       key={j}
-                      className="border-b border-slate-100 pl-4 text-ellipsis overflow-hidden"
+                      className="border-b border-slate-100 text-ellipsis overflow-hidden"
                     >
                       {content}
                     </td>
@@ -160,6 +163,7 @@ export default function TableScan({
           )}
         </tbody>
       </table>
+      <TablePagination LastEvaluatedKey={data.LastEvaluatedKey} />
       {/* </div>
       </div> */}
       {/* <Table
