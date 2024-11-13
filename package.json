@@ -1,10 +1,13 @@
 {
-  "name": "dynamodb-explorer",
+  "name": "@thongdong7/dynamodb-explorer",
   "version": "0.1.0",
-  "private": true,
   "bin": {
-    "dynamodb-explorer": "./dist/dynamodb-explorer.js"
+    "dynamodb-explorer": "dist/dynamodb-explorer.js"
   },
+  "files": [
+    ".next",
+    "dist"
+  ],
   "scripts": {
     "dev": "DYNAMO_ENDPOINT=http://localhost:4566 next dev",
     "build": "next build",
@@ -27,6 +30,11 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/npm": "^12.0.1",
+    "@semantic-release/release-notes-generator": "^14.0.1",
     "@types/cli-color": "^2.0.6",
     "@types/lodash": "^4.17.13",
     "@types/node": "^20",
@@ -36,7 +44,12 @@
     "eslint-config-next": "15.0.3",
     "postcss": "^8",
     "prettier": "^3.3.3",
+    "semantic-release": "^24.2.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
-  }
+  },
+  "description": "GUI for DynamoDB Local, dynalite, localstack etc.",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC"
 }
