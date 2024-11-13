@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/thongdong7/dynamodb-explorer/compare/v1.0.2...v1.0.3) (2024-11-13)
+
+
+### Bug Fixes
+
+* package.json author ([63b09bd](https://github.com/thongdong7/dynamodb-explorer/commit/63b09bd97ad4ed4feafa449dd4cc7e9ca2f48e6b))
+
 ## [1.0.2](https://github.com/thongdong7/dynamodb-explorer/compare/v1.0.1...v1.0.2) (2024-11-13)
 
 
