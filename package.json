@@ -50,7 +50,7 @@
   },
   "description": "GUI for DynamoDB Local, dynalite, localstack etc.",
   "main": "index.js",
-  "author": "",
+  "author": "An Vu",
   "license": "ISC",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
