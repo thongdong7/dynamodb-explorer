@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "dev": "DYNAMO_ENDPOINT=http://localhost:4566 next dev",
-    "build": "next build",
+    "build": "tsc -p tsconfig.cli.json && next build",
     "start": "DYNAMO_ENDPOINT=http://localhost:4566 next start",
     "lint": "next lint"
   },

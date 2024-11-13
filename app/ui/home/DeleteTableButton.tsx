@@ -1,9 +1,9 @@
 import { App, Button, Popconfirm } from "antd";
-import { ClearOutlined } from "@ant-design/icons";
-import { purgeTablesAPI } from "@/app/lib/actions/tables/purge";
+import { DeleteOutlined } from "@ant-design/icons";
+import { deleteTablesAPI } from "@/app/lib/actions/tables/delete";
 import { useAction } from "@/app/lib/hook/action";
 
-export default function PurgeTableButton({
+export default function DeleteTableButton({
   table,
   onSuccess,
 }: {
@@ -14,11 +14,11 @@ export default function PurgeTableButton({
   const {
     loading,
     error,
-    run: _purgeTables,
+    run: _deleteTables,
   } = useAction({
-    action: purgeTablesAPI,
+    action: deleteTablesAPI,
     onSuccess: () => {
-      message.success(`Table ${table} purged`);
+      message.success(`Table ${table} deleted`);
       onSuccess && onSuccess();
     },
   });
@@ -26,17 +26,17 @@ export default function PurgeTableButton({
     <Popconfirm
       title={
         <div>
-          Are you sure you want to purge table <b>{table}</b>?
+          Are you sure you want to delete table <b>{table}</b>?
         </div>
       }
       okText="Yes"
       cancelText="No"
       onConfirm={() => {
-        _purgeTables({ tables: [table] });
+        _deleteTables({ tables: [table] });
       }}
     >
-      <Button type="text" icon={<ClearOutlined />} loading={loading}>
-        Purge
+      <Button danger type="text" icon={<DeleteOutlined />} loading={loading}>
+        Delete
       </Button>
     </Popconfirm>
   );

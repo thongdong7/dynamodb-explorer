@@ -9,7 +9,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "tsc -p tsconfig.cli.json && npm run build"
+        "prepareCmd": "npm run build"
       }
     ]
   ]

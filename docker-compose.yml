@@ -1,0 +1,28 @@
+services:
+  # dynamodb:
+  #   image: amazon/dynamodb-local
+  #   command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /data"
+  #   ports:
+  #     - "8000:8000"
+  #   environment:
+  #     - DEFAULT_REGION=ap-southeast-1
+  #   # persistent data
+  #   volumes:
+  #     - "./docker/dynamodb:/data"
+  # working_dir: /home/dynamodblocal
+  localstack:
+    # container_name: "${LOCALSTACK_DOCKER_NAME:-localstack}"
+    image: localstack/localstack
+    ports:
+      - "127.0.0.1:4566:4566" # LocalStack Gateway
+      - "127.0.0.1:4510-4559:4510-4559" # external services port range
+    environment:
+      # LocalStack configuration: https://docs.localstack.cloud/references/configuration/
+      - DEBUG=${DEBUG:-0}
+      # - LS_LOG=${LS_LOG:-trace}
+      - DISABLE_CORS_CHECKS=${DISABLE_CORS_CHECKS:-1}
+      - SERVICES=dynamodb
+    volumes:
+      # - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+      # - "./volume:/persisted-data"
+      - "/var/run/docker.sock:/var/run/docker.sock"
