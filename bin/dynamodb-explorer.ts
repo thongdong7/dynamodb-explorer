@@ -2,6 +2,14 @@
 
 import { nextStart } from "next/dist/cli/next-start";
 
-nextStart({
-  port: 3000,
-});
+console.log(__dirname);
+
+const distDir = __dirname;
+const rootDir = distDir + "/..";
+console.log(rootDir);
+nextStart(
+  {
+    port: 3000,
+  },
+  rootDir,
+);

@@ -3,5 +3,5 @@
 ## Usage
 
 ```bash
-npx dynamodb-explorer
+npx @thongdong7/dynamodb-explorer
 ```
