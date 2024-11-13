@@ -1,6 +1,7 @@
 import { ColumnType, TableProps } from "antd/es/table";
 import clsx from "clsx";
 import { ReactNode } from "react";
+import { RobotOutlined } from "@ant-design/icons";
 
 export type Column<RecordType> = ColumnType<RecordType> & {
   freeze?: boolean;
@@ -34,8 +35,18 @@ export default function Table<RecordType>({
         </tr>
       </thead>
       <tbody className="bg-white">
-        {dataSource === undefined ? (
-          <div>No data</div>
+        {dataSource === undefined || dataSource.length === 0 ? (
+          <tr>
+            <td
+              colSpan={columns.length}
+              className="text-center p-4 text-gray-500"
+            >
+              <div>
+                <RobotOutlined style={{ fontSize: 48 }} />
+              </div>
+              <div className="mt-4">No data</div>
+            </td>
+          </tr>
         ) : (
           dataSource.map((item, i) => (
             <tr
