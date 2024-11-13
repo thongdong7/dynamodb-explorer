@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/thongdong7/dynamodb-explorer/compare/v1.0.3...v1.0.4) (2024-11-13)
+
+
+### Bug Fixes
+
+* run build before publish ([d03ea68](https://github.com/thongdong7/dynamodb-explorer/commit/d03ea682c68e778d4f4f928d96d7cb3b999d7c1d))
+
 ## [1.0.3](https://github.com/thongdong7/dynamodb-explorer/compare/v1.0.2...v1.0.3) (2024-11-13)
 
 
