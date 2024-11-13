@@ -1,6 +1,6 @@
 {
   "name": "@thongdong7/dynamodb-explorer",
-  "version": "1.0.1",
+  "version": "1.0.1-next",
   "bin": {
     "dynamodb-explorer": "dist/dynamodb-explorer.js"
   },
@@ -51,5 +51,9 @@
   "description": "GUI for DynamoDB Local, dynalite, localstack etc.",
   "main": "index.js",
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "tag": "next"
+  }
 }
