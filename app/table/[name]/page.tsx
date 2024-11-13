@@ -1,9 +1,10 @@
 import { describeTable } from "@/app/lib/actions/tables/describe";
 import { queryTable, scanTable } from "@/app/lib/actions/tables/list";
 import { createPage } from "@/app/lib/utils/createPageUtils";
-import TableScan from "@/app/ui/table/TableScan";
-import { Breadcrumb } from "antd";
+import TableScan from "@/app/ui/table/list/TableScan";
+import { Breadcrumb, Button } from "antd";
 import { z } from "zod";
+import { PlusOutlined } from "@ant-design/icons";
 
 export default createPage()
   .schema(
@@ -46,7 +47,20 @@ export default createPage()
 
       return (
         <div>
-          <Breadcrumb items={[{ title: "Home", href: "/" }, { title: name }]} />
+          <div className="flex justify-between items-center">
+            <Breadcrumb
+              items={[{ title: "Home", href: "/" }, { title: name }]}
+            />
+            <div>
+              <Button
+                type="primary"
+                href="/table/[name]/create"
+                icon={<PlusOutlined />}
+              >
+                Create Item
+              </Button>
+            </div>
+          </div>
           <TableScan table={table} data={data} />
         </div>
       );
