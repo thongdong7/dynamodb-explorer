@@ -5,6 +5,12 @@
     "@semantic-release/release-notes-generator",
     "@semantic-release/changelog",
     "@semantic-release/npm",
-    "@semantic-release/git"
+    "@semantic-release/git",
+    [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "tsc -p tsconfig.cli.json && npm run build"
+      }
+    ]
   ]
 }
