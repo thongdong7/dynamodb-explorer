@@ -1,11 +1,14 @@
 {
-  "name": "dynamodb-manage",
+  "name": "dynamodb-explorer",
   "version": "0.1.0",
   "private": true,
+  "bin": {
+    "dynamodb-explorer": "./dist/dynamodb-explorer.js"
+  },
   "scripts": {
     "dev": "DYNAMO_ENDPOINT=http://localhost:4566 next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "DYNAMO_ENDPOINT=http://localhost:4566 next start",
     "lint": "next lint"
   },
   "dependencies": {

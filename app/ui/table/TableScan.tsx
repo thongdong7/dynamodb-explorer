@@ -185,7 +185,7 @@ export default function TableScan({
   const pkValue = searchParams.get("pkValue");
 
   const { changeParams } = useNav();
-  const drawer = useOpen();
+  const itemDrawer = useOpen();
   const [selectItem, setSelectItem] = useState<
     Record<string, AttributeValue> | undefined
   >(undefined);
@@ -230,13 +230,13 @@ export default function TableScan({
           return {
             onClick: (event) => {
               setSelectItem(record);
-              drawer.onOpen();
+              itemDrawer.onOpen();
             },
           };
         }}
       />
 
-      <ItemViewerDrawer item={selectItem} {...drawer} />
+      <ItemViewerDrawer item={selectItem} {...itemDrawer} />
 
       <TablePagination LastEvaluatedKey={data.LastEvaluatedKey} />
     </div>

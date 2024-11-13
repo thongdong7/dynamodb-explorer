@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { listAllTables } from "./lib/actions/tables/describe";
 import Home from "./ui/home/Home";
 

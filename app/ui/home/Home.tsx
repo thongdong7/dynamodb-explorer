@@ -9,6 +9,7 @@ export default function Home({ data }: { data: ListTablesResult }) {
     <div>
       <Table
         dataSource={data.tables}
+        size="small"
         columns={[
           {
             title: "Name",
@@ -39,6 +40,7 @@ export default function Home({ data }: { data: ListTablesResult }) {
             ),
           },
         ]}
+        rowKey={(record) => record.Table?.TableName!}
       />
       {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
     </div>

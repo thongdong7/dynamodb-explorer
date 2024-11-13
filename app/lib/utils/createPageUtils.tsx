@@ -1,8 +1,8 @@
-import { z } from "zod";
-import { headers } from "next/headers";
+import { Alert, Result } from "antd";
 import { ReactNode } from "react";
+import { z } from "zod";
 import { APIError } from "./apiUtils";
-import { Alert } from "antd";
+import { loadDynamoConfig } from "./clientUtils";
 
 type PageProps = {
   params: {};
@@ -82,8 +82,35 @@ class PageBuilder<Context, NewContext> {
           message = error.message;
         } else if (error instanceof PageErrors) {
           message = error.errors.map((item) => item.errors.join(", "));
+        } else if (error instanceof Error) {
+          if ("code" in error && error.code == "ECONNREFUSED") {
+            return (
+              <Result
+                status="error"
+                title="Connection Error"
+                subTitle={
+                  <div>
+                    <div>
+                      Could not connect to DynamoDB at{" "}
+                      <b>{loadDynamoConfig().endpoint}</b>.
+                    </div>
+                    <div>
+                      Ensure that DynamoDB is running and accessible at this
+                      address.
+                    </div>
+                    <div>
+                      You can config the DynamoDB endpoint by setting the{" "}
+                      <b>DYNAMO_ENDPOINT</b> environment variable.
+                    </div>
+                  </div>
+                }
+              />
+            );
+          } else {
+            message = error.message;
+          }
         } else {
-          message = (error as Error).message;
+          message = String(error);
         }
 
         return <Alert type="error" message={message} />;
@@ -91,6 +118,8 @@ class PageBuilder<Context, NewContext> {
     };
   }
 }
+
+class ConnectionError extends Error {}
 
 export function createPage() {
   return new PageBuilder<{}, {}>(async () => ({}));
