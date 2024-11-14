@@ -32,12 +32,14 @@ export default function TableCreateForm() {
           <>
             <Form.Item
               name="TableName"
-              label="Table Name"
+              label="Table Name1"
               required
               rules={[
                 {
                   required: true,
-                  message: "Please input your table name!",
+                  pattern: /^[a-zA-Z0-9_\-\.]{3,255}$/,
+                  message:
+                    "Invalid table name. Table names must be between 3 and 255 characters long, and may contain only the characters a-z, A-Z, 0-9, '_', '-', and '.'",
                 },
               ]}
             >
@@ -51,14 +53,6 @@ export default function TableCreateForm() {
                 rules={[
                   {
                     required: true,
-                    message: "Please input your hash attribute name!",
-                  },
-                  {
-                    min: 3,
-                    max: 255,
-                    pattern: /^[a-zA-Z0-9_\-\.]+$/,
-                    message:
-                      "Invalid table/index name. Table/index names must be between 3 and 255 characters long, and may contain only the characters a-z, A-Z, 0-9, '_', '-', and '.'",
                   },
                 ]}
               >

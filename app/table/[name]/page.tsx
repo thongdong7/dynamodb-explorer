@@ -57,7 +57,7 @@ export default createPage()
               <TableInfoButton table={table} />
               <Button
                 type="primary"
-                href="/table/[name]/create"
+                href={`/table/${name}/create`}
                 icon={<PlusOutlined />}
               >
                 Create Item
