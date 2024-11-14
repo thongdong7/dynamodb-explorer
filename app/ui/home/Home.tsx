@@ -32,7 +32,7 @@ export default function Home({ data }: { data: ListTablesResult }) {
     },
   });
   return (
-    <div>
+    <div className="container-focus">
       <div className="flex justify-between items-center">
         <h1>Tables</h1>
         <Space>

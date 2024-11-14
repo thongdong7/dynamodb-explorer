@@ -2,6 +2,7 @@ import { AttributeValue } from "@aws-sdk/client-dynamodb";
 import { Drawer, Tabs } from "antd";
 import JsonView from "@uiw/react-json-view";
 import { darkTheme } from "@uiw/react-json-view/dark";
+import MyJsonViewer from "../../common/MyJsonViewer";
 
 function formatItem(item: Record<string, AttributeValue>) {
   let ret: Record<string, any> = {};
@@ -41,28 +42,12 @@ export default function ItemViewerDrawer({
           {
             key: "raw",
             label: "Raw",
-            children: (
-              <JsonView
-                value={item}
-                displayDataTypes={false}
-                displayObjectSize={false}
-                style={darkTheme}
-                shortenTextAfterLength={0}
-              />
-            ),
+            children: <MyJsonViewer value={item} />,
           },
           {
             key: "formatted",
             label: "Formatted",
-            children: (
-              <JsonView
-                value={formatItem(item)}
-                displayDataTypes={false}
-                displayObjectSize={false}
-                style={darkTheme}
-                shortenTextAfterLength={0}
-              />
-            ),
+            children: <MyJsonViewer value={formatItem(item)} />,
           },
         ]}
       />

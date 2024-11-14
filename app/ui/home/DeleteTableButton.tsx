@@ -1,4 +1,5 @@
-import { App, Button, Popconfirm } from "antd";
+"use client";
+import { App, Button, ButtonProps, Popconfirm } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { deleteTablesAPI } from "@/app/lib/actions/tables/delete";
 import { useAction } from "@/app/lib/hook/action";
@@ -6,8 +7,10 @@ import { useAction } from "@/app/lib/hook/action";
 export default function DeleteTableButton({
   table,
   onSuccess,
+  type = "text",
 }: {
   table: string;
+  type?: ButtonProps["type"];
   onSuccess?: () => void;
 }) {
   const { message } = App.useApp();
@@ -35,7 +38,7 @@ export default function DeleteTableButton({
         _deleteTables({ tables: [table] });
       }}
     >
-      <Button danger type="text" icon={<DeleteOutlined />} loading={loading}>
+      <Button danger type={type} icon={<DeleteOutlined />} loading={loading}>
         Delete
       </Button>
     </Popconfirm>

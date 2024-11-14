@@ -1,4 +1,5 @@
-import { App, Button, Popconfirm } from "antd";
+"use client";
+import { App, Button, ButtonProps, Popconfirm } from "antd";
 import { ClearOutlined } from "@ant-design/icons";
 import { purgeTablesAPI } from "@/app/lib/actions/tables/purge";
 import { useAction } from "@/app/lib/hook/action";
@@ -6,8 +7,10 @@ import { useAction } from "@/app/lib/hook/action";
 export default function PurgeTableButton({
   table,
   onSuccess,
+  type = "text",
 }: {
   table: string;
+  type?: ButtonProps["type"];
   onSuccess?: () => void;
 }) {
   const { message } = App.useApp();
@@ -35,7 +38,7 @@ export default function PurgeTableButton({
         _purgeTables({ tables: [table] });
       }}
     >
-      <Button type="text" icon={<ClearOutlined />} loading={loading}>
+      <Button type={type} icon={<ClearOutlined />} loading={loading}>
         Purge
       </Button>
     </Popconfirm>

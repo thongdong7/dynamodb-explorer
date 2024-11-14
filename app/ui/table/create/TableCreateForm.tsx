@@ -1,12 +1,15 @@
 "use client";
 
+import { createTableAPI } from "@/app/lib/actions/tables/create";
+import { useBackRefresh } from "@/app/lib/hook/backRefresh";
 import { App, Button, Form, Input } from "antd";
 import FormAction from "../../form/FormAction";
-import { createTableAPI } from "@/app/lib/actions/tables/create";
+import SecondIndexFormItem from "./SecondIndexFormItem";
 import SelectAttrType from "./SelectAttrType";
 
 export default function TableCreateForm() {
   const { message } = App.useApp();
+  const backRefresh = useBackRefresh();
   return (
     <div>
       <h1 className="text-2xl">Create Table</h1>
@@ -23,6 +26,7 @@ export default function TableCreateForm() {
         }}
         onSuccess={() => {
           message.success("Table created");
+          backRefresh();
         }}
         render={({ loading }) => (
           <>
@@ -48,6 +52,13 @@ export default function TableCreateForm() {
                   {
                     required: true,
                     message: "Please input your hash attribute name!",
+                  },
+                  {
+                    min: 3,
+                    max: 255,
+                    pattern: /^[a-zA-Z0-9_\-\.]+$/,
+                    message:
+                      "Invalid table/index name. Table/index names must be between 3 and 255 characters long, and may contain only the characters a-z, A-Z, 0-9, '_', '-', and '.'",
                   },
                 ]}
               >
@@ -91,8 +102,47 @@ export default function TableCreateForm() {
                 <Input type="number" />
               </Form.Item>
             </div>
+            <Form.List name="indexes">
+              {(fields, { add, remove }) => (
+                <div
+                  style={{
+                    display: "flex",
+                    rowGap: 16,
+                    flexDirection: "column",
+                  }}
+                >
+                  {fields.map((field) => (
+                    <SecondIndexFormItem key={field.key} field={field} />
+                  ))}
+
+                  <Button
+                    type="dashed"
+                    onClick={() =>
+                      add({
+                        name: "",
+                        type: "GSI",
+                        HashAttrName: "",
+                        HashAttrType: "S",
+                        RangeAttrName: "",
+                        RangeAttrType: "S",
+                        ReadCapacityUnits: 3,
+                        WriteCapacityUnits: 3,
+                      })
+                    }
+                    block
+                  >
+                    + Add Secondary Index
+                  </Button>
+                </div>
+              )}
+            </Form.List>
             <Form.Item>
-              <Button type="primary" htmlType="submit" loading={loading}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={loading}
+                className="mt-2"
+              >
                 Create Table
               </Button>
             </Form.Item>

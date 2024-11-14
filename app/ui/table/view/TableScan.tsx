@@ -8,7 +8,7 @@ import {
   GlobalSecondaryIndexDescription,
   ScanCommandOutput,
 } from "@aws-sdk/client-dynamodb";
-import { Button, Checkbox } from "antd";
+import { Button, Checkbox, Space } from "antd";
 import { ColumnType } from "antd/es/table";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -18,6 +18,7 @@ import Table, { Column } from "./Table";
 import TablePagination from "./TablePagination";
 import { useOpen } from "@/app/lib/hook/open";
 import ItemViewerDrawer from "./ItemViewerDrawer";
+import { humanFileSize } from "@/app/lib/utils/format";
 
 function keySchemaToColumns(item: GlobalSecondaryIndexDescription): MyColumn[] {
   if (!item.KeySchema) {
@@ -90,9 +91,9 @@ export default function TableScan({
     (key) => key.KeyType === "RANGE",
   )?.AttributeName;
 
-  if (!sk) {
-    return <div>Table does not have a sort key</div>;
-  }
+  // if (!sk) {
+  //   return <div>Table does not have a sort key</div>;
+  // }
 
   let gsiColumns: ColumnType<RecordType>[] = [];
   const gsiIndexes = (table.Table.GlobalSecondaryIndexes ?? []).filter(
@@ -101,16 +102,21 @@ export default function TableScan({
   const [hideGSIIndexes, setHideGSIIndexes] = useState<Record<string, boolean>>(
     {},
   );
+  let gsiFields: string[] = [];
   if (table.Table.GlobalSecondaryIndexes) {
     gsiColumns = gsiIndexes
       .filter((item) => !hideGSIIndexes[item.IndexName!])
       .flatMap((item) => keySchemaToColumns(item));
+    gsiFields = gsiIndexes
+      .flatMap((item) => item.KeySchema?.map((key) => key.AttributeName) ?? [])
+      .filter((item) => item !== undefined);
   }
 
   const keyFields: string[] = [
     pk,
-    sk,
-    ...gsiColumns.map((column) => column.dataIndex as string),
+    ...(sk ? [sk] : []),
+    // ...gsiColumns.map((column) => column.dataIndex as string),
+    ...gsiFields,
   ];
   const keyFieldsSet = new Set(keyFields);
 
@@ -161,14 +167,18 @@ export default function TableScan({
       freeze: true,
       noWrap: true,
     },
-    {
-      title: `${sk} (Sort Key)`,
-      dataIndex: sk,
-      render: (value: AttributeValue) => <RecordValue value={value} />,
-      ellipsis: true,
-      isSK: true,
-      noWrap: true,
-    },
+    ...(sk
+      ? [
+          {
+            title: `${sk} (Sort Key)`,
+            dataIndex: sk,
+            render: (value: AttributeValue) => <RecordValue value={value} />,
+            ellipsis: true,
+            isSK: true,
+            noWrap: true,
+          },
+        ]
+      : []),
     ...gsiColumns,
     ...attributesColumns,
     {
@@ -220,7 +230,19 @@ export default function TableScan({
             </Button>
           )}
         </div>
-        <TablePagination LastEvaluatedKey={data.LastEvaluatedKey} />
+        <Space>
+          {table.Table.ItemCount && (
+            <span>
+              Count: <b>{table.Table.ItemCount.toLocaleString("en-US")}</b>
+            </span>
+          )}
+          {table.Table.TableSizeBytes && (
+            <span>
+              Size: <b>{humanFileSize(table.Table.TableSizeBytes)}</b>
+            </span>
+          )}
+          <TablePagination LastEvaluatedKey={data.LastEvaluatedKey} />
+        </Space>
       </div>
 
       <Table
@@ -258,13 +280,14 @@ function SearchValue({
 
   return (
     <span
-      onClick={() =>
+      onClick={(e) => {
+        e.stopPropagation();
         changeParams({
           indexName,
           pkField: dataIndex as string,
           pkValue: getValue(value) as string,
-        })
-      }
+        });
+      }}
       className="hover:underline text-sky-500 cursor-pointer"
     >
       <RecordValue value={value} /> <SearchOutlined />

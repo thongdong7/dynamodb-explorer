@@ -3,7 +3,11 @@
 import { z } from "zod";
 import { apiAction } from "../../utils/apiUtils";
 import { getClient } from "../../utils/clientUtils";
-import { CreateTableCommand, KeySchemaElement } from "@aws-sdk/client-dynamodb";
+import {
+  CreateTableCommand,
+  CreateTableCommandInput,
+  KeySchemaElement,
+} from "@aws-sdk/client-dynamodb";
 
 export const createTableAPI = apiAction()
   .schema(
@@ -15,6 +19,21 @@ export const createTableAPI = apiAction()
       RangeAttrType: z.enum(["S", "N", "B"]).optional(),
       ReadCapacityUnits: z.coerce.number().optional().default(1),
       WriteCapacityUnits: z.coerce.number().optional().default(1),
+      indexes: z
+        .array(
+          z.object({
+            name: z.string(),
+            type: z.enum(["GSI", "LSI"]),
+            HashAttrName: z.string(),
+            HashAttrType: z.enum(["S", "N", "B"]),
+            RangeAttrName: z.string().optional(),
+            RangeAttrType: z.enum(["S", "N", "B"]).optional(),
+            ReadCapacityUnits: z.coerce.number().optional().default(1),
+            WriteCapacityUnits: z.coerce.number().optional().default(1),
+          }),
+        )
+        .optional()
+        .default([]),
     }),
   )
   .inputType()
@@ -28,6 +47,7 @@ export const createTableAPI = apiAction()
         RangeAttrType,
         ReadCapacityUnits,
         WriteCapacityUnits,
+        indexes,
       },
     }) => {
       const attrDefs = [
@@ -36,6 +56,18 @@ export const createTableAPI = apiAction()
           AttributeType: HashAttrType,
         },
       ];
+
+      function addAttrDef(
+        name: string | undefined,
+        type: "S" | "N" | "B" | undefined,
+      ) {
+        if (name && type) {
+          attrDefs.push({
+            AttributeName: name,
+            AttributeType: type,
+          });
+        }
+      }
       const keySchema: KeySchemaElement[] = [
         {
           AttributeName: HashAttrName,
@@ -43,12 +75,16 @@ export const createTableAPI = apiAction()
         },
       ];
 
-      if (RangeAttrName && RangeAttrType) {
-        attrDefs.push({
-          AttributeName: RangeAttrName,
-          AttributeType: RangeAttrType,
-        });
-      }
+      addAttrDef(RangeAttrName, RangeAttrType);
+
+      indexes.forEach((index) => {
+        if (index.type === "LSI") {
+          addAttrDef(index.RangeAttrName, index.RangeAttrType);
+        } else if (index.type === "GSI") {
+          addAttrDef(index.HashAttrName, index.HashAttrType);
+          addAttrDef(index.RangeAttrName, index.RangeAttrType);
+        }
+      });
 
       if (RangeAttrName && RangeAttrType) {
         keySchema.push({
@@ -56,6 +92,30 @@ export const createTableAPI = apiAction()
           KeyType: "RANGE",
         });
       }
+
+      const GlobalSecondaryIndexes: CreateTableCommandInput["GlobalSecondaryIndexes"] =
+        indexes
+          .filter((index) => index.type === "GSI")
+          .map((index) => ({
+            IndexName: index.name,
+            KeySchema: [
+              {
+                AttributeName: index.HashAttrName,
+                KeyType: "HASH",
+              },
+              {
+                AttributeName: index.RangeAttrName,
+                KeyType: "RANGE",
+              },
+            ],
+            Projection: {
+              ProjectionType: "ALL",
+            },
+            ProvisionedThroughput: {
+              ReadCapacityUnits: index.ReadCapacityUnits,
+              WriteCapacityUnits: index.WriteCapacityUnits,
+            },
+          }));
       await getClient().send(
         new CreateTableCommand({
           TableName,
@@ -65,6 +125,29 @@ export const createTableAPI = apiAction()
             ReadCapacityUnits,
             WriteCapacityUnits,
           },
+          GlobalSecondaryIndexes:
+            GlobalSecondaryIndexes.length > 0
+              ? GlobalSecondaryIndexes
+              : undefined,
+          LocalSecondaryIndexes: indexes
+            .filter((index) => index.type === "LSI")
+            .map((index) => ({
+              IndexName: index.name,
+              KeySchema: [
+                {
+                  // AttributeName: index.HashAttrName,
+                  AttributeName: HashAttrName,
+                  KeyType: "HASH",
+                },
+                {
+                  AttributeName: index.RangeAttrName,
+                  KeyType: "RANGE",
+                },
+              ],
+              Projection: {
+                ProjectionType: "ALL",
+              },
+            })),
         }),
       );
     },

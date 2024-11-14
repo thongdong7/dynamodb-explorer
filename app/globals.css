@@ -19,3 +19,9 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@layer utilities {
+  .container-focus {
+    @apply container max-w-5xl mx-auto;
+  }
+}
