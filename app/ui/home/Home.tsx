@@ -98,38 +98,38 @@ export default function Home({ data }: { data: ListTablesResult }) {
         columns={[
           {
             title: "Name",
-            dataIndex: ["Table", "TableName"],
+            dataIndex: ["TableName"],
             render: (name: string) => <a href={`/table/${name}`}>{name}</a>,
           },
           {
             title: "Item Count",
-            dataIndex: ["Table", "ItemCount"],
+            dataIndex: ["ItemCount"],
           },
           {
             title: "Size (Bytes)",
-            dataIndex: ["Table", "TableSizeBytes"],
+            dataIndex: ["TableSizeBytes"],
           },
           {
             title: "Status",
-            dataIndex: ["Table", "TableStatus"],
+            dataIndex: ["TableStatus"],
           },
           {
             title: "Actions",
             render: (value, record) => (
               <Space>
                 <PurgeTableButton
-                  table={record.Table?.TableName!}
+                  table={record.TableName!}
                   onSuccess={() => router.refresh()}
                 />
                 <DeleteTableButton
-                  table={record.Table?.TableName!}
+                  table={record.TableName!}
                   onSuccess={() => router.refresh()}
                 />
               </Space>
             ),
           },
         ]}
-        rowKey={(record) => record.Table?.TableName!}
+        rowKey={(record) => record.TableName!}
       />
       {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
     </div>

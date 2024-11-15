@@ -17,6 +17,8 @@
   "dependencies": {
     "@ant-design/nextjs-registry": "^1.0.1",
     "@aws-sdk/client-dynamodb": "^3.687.0",
+    "@aws-sdk/lib-dynamodb": "^3.692.0",
+    "@monaco-editor/react": "^4.6.0",
     "@uiw/react-json-view": "^2.0.0-alpha.30",
     "antd": "^5.22.0",
     "aws-sdk": "^2.1692.0",

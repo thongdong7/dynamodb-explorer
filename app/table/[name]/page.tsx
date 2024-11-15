@@ -7,6 +7,7 @@ import TableScan from "@/app/ui/table/view/TableScan";
 import TableViewDeleteTableButton from "@/app/ui/table/view/TableViewDeleteTableButton";
 import { PlusOutlined } from "@ant-design/icons";
 import { Breadcrumb, Button, Space } from "antd";
+import { notFound } from "next/navigation";
 import { z } from "zod";
 
 export default createPage()
@@ -47,6 +48,10 @@ export default createPage()
               ExclusiveStartKey: startKey ? JSON.parse(startKey) : undefined,
             });
       const [table, data] = await Promise.all([describeTable(name), dataFn]);
+
+      if (!table) {
+        notFound();
+      }
 
       return (
         <div className="flex flex-col gap-2">

@@ -1,4 +1,5 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import clc from "cli-color";
 
 interface DynamoConfig {
@@ -78,4 +79,13 @@ export function getClient(): DynamoDBClient {
   }
 
   return client;
+}
+
+let docClient: DynamoDBDocumentClient | undefined;
+export function getDocClient(): DynamoDBClient {
+  if (!docClient) {
+    docClient = DynamoDBDocumentClient.from(getClient());
+  }
+
+  return docClient;
 }

@@ -5,11 +5,12 @@ import {
   DescribeTableCommandOutput,
   ListTablesCommand,
   ListTablesCommandOutput,
+  TableDescription,
 } from "@aws-sdk/client-dynamodb";
 import { getClient } from "../../utils/clientUtils";
 
 export interface ListTablesResult extends ListTablesCommandOutput {
-  tables: DescribeTableCommandOutput[];
+  tables: TableDescription[];
 }
 
 export const listAllTables = async (): Promise<ListTablesResult> => {
@@ -22,12 +23,12 @@ export const listAllTables = async (): Promise<ListTablesResult> => {
 
   const tableNames = res.TableNames ?? [];
 
-  let tables: DescribeTableCommandOutput[] = [];
+  let tables: TableDescription[] = [];
   if (tableNames) {
     // Describe tables
-    tables = await Promise.all(
-      tableNames.map((tableName) => describeTable(tableName)),
-    );
+    tables = (
+      await Promise.all(tableNames.map((tableName) => describeTable(tableName)))
+    ).filter((table) => table !== undefined);
   }
   return {
     ...res,
@@ -41,5 +42,5 @@ export const describeTable = async (tableName: string) => {
   });
 
   const res = await getClient().send(command);
-  return res;
+  return res.Table;
 };

@@ -109,11 +109,11 @@ import { chunk } from "lodash";
 
 export const purgeTable = async (tableName: string) => {
   const table = await describeTable(tableName);
-  if (!table.Table) {
+  if (!table) {
     return;
   }
 
-  const primaryKeys = table.Table.KeySchema;
+  const primaryKeys = table.KeySchema;
 
   if (!primaryKeys) {
     return;

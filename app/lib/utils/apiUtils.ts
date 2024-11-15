@@ -84,6 +84,7 @@ class ActionBuilder<Input, Context, NewContext> {
           return { ok: false, errors: error.errors };
         }
 
+        console.error(error);
         return {
           ok: false,
           error: (error as Error).message,

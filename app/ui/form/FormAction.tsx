@@ -14,7 +14,8 @@ export default function FormAction<TValues, Output>({
   render: (
     params: ReturnType<typeof useFormAction<TValues, Output>>,
   ) => ReactNode;
-} & Parameters<typeof useFormAction<TValues, Output> & FormProps<TValues>>[0]) {
+} & Parameters<typeof useFormAction<TValues, Output>>[0] &
+  FormProps<TValues>) {
   const { form, onFinish, error, loading } = useFormAction({
     form: initForm,
     action,
@@ -23,7 +24,11 @@ export default function FormAction<TValues, Output>({
   });
   return (
     <Form form={form} onFinish={onFinish} layout="vertical" {...props}>
-      {error && <Alert message={error} type="error" />}
+      {error && (
+        <div className="mb-2">
+          <Alert message={error} type="error" />
+        </div>
+      )}
       {render({ form, error, loading, onFinish })}
     </Form>
   );

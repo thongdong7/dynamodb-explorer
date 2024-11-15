@@ -4,7 +4,7 @@ import { useNav } from "@/app/lib/hook/nav";
 import { CloseOutlined, SearchOutlined } from "@ant-design/icons";
 import {
   AttributeValue,
-  DescribeTableCommandOutput,
+  TableDescription,
   GlobalSecondaryIndexDescription,
   ScanCommandOutput,
 } from "@aws-sdk/client-dynamodb";
@@ -72,14 +72,14 @@ export default function TableScan({
   table,
   data,
 }: {
-  table: DescribeTableCommandOutput;
+  table: TableDescription;
   data: ScanCommandOutput;
 }) {
-  if (!table.Table) {
+  if (!table) {
     return <div>Table not found</div>;
   }
 
-  const pk = table.Table.KeySchema?.find(
+  const pk = table.KeySchema?.find(
     (key) => key.KeyType === "HASH",
   )?.AttributeName;
 
@@ -87,23 +87,19 @@ export default function TableScan({
     return <div>Table does not have a primary key</div>;
   }
 
-  const sk = table.Table.KeySchema?.find(
+  const sk = table.KeySchema?.find(
     (key) => key.KeyType === "RANGE",
   )?.AttributeName;
 
-  // if (!sk) {
-  //   return <div>Table does not have a sort key</div>;
-  // }
-
   let gsiColumns: ColumnType<RecordType>[] = [];
-  const gsiIndexes = (table.Table.GlobalSecondaryIndexes ?? []).filter(
+  const gsiIndexes = (table.GlobalSecondaryIndexes ?? []).filter(
     (item) => item.IndexName,
   );
   const [hideGSIIndexes, setHideGSIIndexes] = useState<Record<string, boolean>>(
     {},
   );
   let gsiFields: string[] = [];
-  if (table.Table.GlobalSecondaryIndexes) {
+  if (table.GlobalSecondaryIndexes) {
     gsiColumns = gsiIndexes
       .filter((item) => !hideGSIIndexes[item.IndexName!])
       .flatMap((item) => keySchemaToColumns(item));
@@ -231,14 +227,14 @@ export default function TableScan({
           )}
         </div>
         <Space>
-          {table.Table.ItemCount && (
+          {table.ItemCount && (
             <span>
-              Count: <b>{table.Table.ItemCount.toLocaleString("en-US")}</b>
+              Count: <b>{table.ItemCount.toLocaleString("en-US")}</b>
             </span>
           )}
-          {table.Table.TableSizeBytes && (
+          {table.TableSizeBytes && (
             <span>
-              Size: <b>{humanFileSize(table.Table.TableSizeBytes)}</b>
+              Size: <b>{humanFileSize(table.TableSizeBytes)}</b>
             </span>
           )}
           <TablePagination LastEvaluatedKey={data.LastEvaluatedKey} />
