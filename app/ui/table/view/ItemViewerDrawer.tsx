@@ -58,17 +58,17 @@ export default function ItemViewerDrawer({
       }
     >
       <Tabs
-        defaultActiveKey="raw"
+        defaultActiveKey="formatted"
         items={[
-          {
-            key: "raw",
-            label: "Raw",
-            children: <MyJsonViewer value={item} />,
-          },
           {
             key: "formatted",
             label: "Formatted",
             children: <MyJsonViewer value={formattedItem} />,
+          },
+          {
+            key: "raw",
+            label: "Raw",
+            children: <MyJsonViewer value={item} />,
           },
         ]}
       />

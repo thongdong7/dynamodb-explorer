@@ -4,13 +4,9 @@ import { putItemAPI } from "@/app/lib/actions/item/create";
 import { useBackRefresh } from "@/app/lib/hook/backRefresh";
 import { getTableInfo, TableInfo } from "@/app/lib/utils/tableUtils";
 import { TableDescription } from "@aws-sdk/client-dynamodb";
-import { darkTheme } from "@uiw/react-json-view/dark";
 import { App, Button, Form } from "antd";
-import { useRouter } from "next/navigation";
 import JSONEditor from "../common/JSONEditor";
 import FormAction from "../form/FormAction";
-
-darkTheme.padding = "4";
 
 function typeToInitValue(type: "S" | "N" | "B" | undefined) {
   switch (type) {
@@ -45,7 +41,6 @@ export default function PutItemForm({
 }) {
   const tableInfo = getTableInfo(table);
   const { message } = App.useApp();
-  const router = useRouter();
   const backRefresh = useBackRefresh();
   return (
     <FormAction
