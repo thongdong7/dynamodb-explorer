@@ -2,6 +2,8 @@
 
 ## Usage
 
+Assume that we have DynamoDB run use `localstack` at `http://localhost:4566`
+
 ```bash
-npx @thongdong7/dynamodb-explorer
+DYNAMO_ENDPOINT=http://localhost:4566 npx @thongdong7/dynamodb-explorer
 ```
