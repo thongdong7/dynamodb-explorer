@@ -1,6 +1,7 @@
 import { describeTable } from "@/app/lib/actions/tables/describe";
 import { queryTable, scanTable } from "@/app/lib/actions/tables/list";
 import { createPage } from "@/app/lib/utils/createPageUtils";
+import PageHeading from "@/app/ui/common/PageHeading";
 import PurgeTableButton from "@/app/ui/home/PurgeTableButton";
 import TableInfoButton from "@/app/ui/table/info/TableInfoButton";
 import TableScan from "@/app/ui/table/view/TableScan";
@@ -57,7 +58,7 @@ export default createPage()
         <div className="flex flex-col gap-2">
           <Breadcrumb items={[{ title: "Home", href: "/" }, { title: name }]} />
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-semibold">{name}</h1>
+            <PageHeading value={name} />
             <Space>
               <TableInfoButton table={table} />
               <Button

@@ -10,6 +10,8 @@ import { ClearOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { deleteTablesAPI } from "@/app/lib/actions/tables/delete";
 import { useAction } from "@/app/lib/hook/action";
 import { purgeTablesAPI } from "@/app/lib/actions/tables/purge";
+import { humanFileSize } from "@/app/lib/utils/format";
+import PageHeading from "../common/PageHeading";
 
 export default function Home({ data }: { data: ListTablesResult }) {
   const router = useRouter();
@@ -32,9 +34,9 @@ export default function Home({ data }: { data: ListTablesResult }) {
     },
   });
   return (
-    <div className="container-focus">
+    <div className="container-focus flex flex-col gap-2">
       <div className="flex justify-between items-center">
-        <h1>Tables</h1>
+        <PageHeading value="Tables" />
         <Space>
           <Button
             type="primary"
@@ -104,10 +106,14 @@ export default function Home({ data }: { data: ListTablesResult }) {
           {
             title: "Item Count",
             dataIndex: ["ItemCount"],
+            render: (count: number) => count.toLocaleString("en-US"),
+            align: "right",
           },
           {
-            title: "Size (Bytes)",
+            title: "Size",
             dataIndex: ["TableSizeBytes"],
+            render: (size: number) => humanFileSize(size),
+            align: "right",
           },
           {
             title: "Status",
@@ -131,7 +137,6 @@ export default function Home({ data }: { data: ListTablesResult }) {
         ]}
         rowKey={(record) => record.TableName!}
       />
-      {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
     </div>
   );
 }

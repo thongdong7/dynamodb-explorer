@@ -7,13 +7,15 @@ import FormAction from "../../form/FormAction";
 import SecondIndexFormItem from "./SecondIndexFormItem";
 import SelectAttrType from "./SelectAttrType";
 import { SaveOutlined } from "@ant-design/icons";
+import PageHeading from "../../common/PageHeading";
 
 export default function TableCreateForm() {
   const { message } = App.useApp();
   const backRefresh = useBackRefresh();
+
   return (
     <div>
-      <h1 className="text-2xl">Create Table</h1>
+      <PageHeading value="Create Table" />
       <FormAction
         action={createTableAPI}
         initialValues={{
@@ -136,7 +138,7 @@ export default function TableCreateForm() {
                 type="primary"
                 htmlType="submit"
                 loading={loading}
-                className="mt-2"
+                className="mt-4"
                 icon={<SaveOutlined />}
               >
                 Create Table

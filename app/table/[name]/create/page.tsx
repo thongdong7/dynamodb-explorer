@@ -1,5 +1,6 @@
 import { describeTable } from "@/app/lib/actions/tables/describe";
 import { createPage } from "@/app/lib/utils/createPageUtils";
+import PageHeading from "@/app/ui/common/PageHeading";
 import PutItemForm from "@/app/ui/item/PutItemForm";
 import { Breadcrumb } from "antd";
 import Link from "next/link";
@@ -34,7 +35,7 @@ export default createPage()
               { title: "Create item" },
             ]}
           />
-          <h1 className="text-xl">Create item</h1>
+          <PageHeading value="Create item" />
           <PutItemForm tableName={name} table={table} />
         </div>
       );
