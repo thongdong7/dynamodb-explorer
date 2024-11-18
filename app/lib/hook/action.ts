@@ -8,17 +8,19 @@ type ActionValuesOf<T> = T extends (values: infer V) => Promise<APIResult<any>>
   ? V
   : never;
 
-export function useFormAction<TValues, Output>({
+export interface FormActionProps<TValues, Output, TExtraValues> {
+  form?: FormInstance<TValues>;
+  action: (values: TValues) => Promise<APIResult<Output>>;
+  onSuccess?: (data: Output, values: TValues) => void;
+  extraValues?: TExtraValues;
+}
+
+export function useFormAction<TValues, Output, TExtraValues extends {}>({
   form: initForm,
   action,
   onSuccess,
-  extraValues = {},
-}: {
-  action: (values: TValues) => Promise<APIResult<Output>>;
-  form?: FormInstance<ActionValuesOf<typeof action>>;
-  onSuccess?: (data: Output, values: TValues) => void;
-  extraValues?: Partial<TValues>;
-}) {
+  extraValues = {} as TExtraValues,
+}: FormActionProps<TValues, Output, TExtraValues>) {
   const { message } = App.useApp();
   const [form] = Form.useForm<ActionValuesOf<typeof action>>(initForm);
   const [loading, setLoading] = useState(false);

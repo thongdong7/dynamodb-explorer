@@ -1,9 +1,9 @@
 "use client";
-import { useFormAction } from "@/app/lib/hook/action";
+import { FormActionProps, useFormAction } from "@/app/lib/hook/action";
 import { Alert, Form, FormProps } from "antd";
 import { ReactNode } from "react";
 
-export default function FormAction<TValues, Output>({
+export default function FormAction<TValues, Output, TExtraValues extends {}>({
   render,
   action,
   onSuccess,
@@ -12,10 +12,10 @@ export default function FormAction<TValues, Output>({
   ...props
 }: {
   render: (
-    params: ReturnType<typeof useFormAction<TValues, Output>>,
+    params: ReturnType<typeof useFormAction<TValues, Output, TExtraValues>>,
   ) => ReactNode;
-} & Parameters<typeof useFormAction<TValues, Output>>[0] &
-  FormProps<TValues>) {
+} & FormActionProps<TValues, Output, TExtraValues> &
+  Omit<FormProps<TValues>, "action">) {
   const { form, onFinish, error, loading } = useFormAction({
     form: initForm,
     action,

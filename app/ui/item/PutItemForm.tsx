@@ -1,12 +1,14 @@
 "use client";
 
 import { putItemAPI } from "@/app/lib/actions/item/create";
+import { useBackRefresh } from "@/app/lib/hook/backRefresh";
+import { getTableInfo, TableInfo } from "@/app/lib/utils/tableUtils";
 import { TableDescription } from "@aws-sdk/client-dynamodb";
 import { darkTheme } from "@uiw/react-json-view/dark";
-import { App, Button, Form, Input } from "antd";
+import { App, Button, Form } from "antd";
+import { useRouter } from "next/navigation";
 import JSONEditor from "../common/JSONEditor";
 import FormAction from "../form/FormAction";
-import { getTableInfo, TableInfo } from "@/app/lib/utils/tableUtils";
 
 darkTheme.padding = "4";
 
@@ -35,19 +37,25 @@ function buildInitItem(tableInfo: TableInfo) {
 export default function PutItemForm({
   tableName,
   table,
+  item,
 }: {
   tableName: string;
   table: TableDescription;
+  item?: Record<string, any>;
 }) {
   const tableInfo = getTableInfo(table);
   const { message } = App.useApp();
+  const router = useRouter();
+  const backRefresh = useBackRefresh();
   return (
     <FormAction
       action={putItemAPI}
       extraValues={{ TableName: tableName }}
-      initialValues={{ Item: buildInitItem(tableInfo) }}
+      initialValues={{ Item: item ? item : buildInitItem(tableInfo) }}
       onSuccess={() => {
-        message.success(`Item created`);
+        message.success(`Item ${item ? "updated" : "created"} successfully`);
+
+        backRefresh();
       }}
       render={() => (
         <>

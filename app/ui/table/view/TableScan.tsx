@@ -19,6 +19,7 @@ import TablePagination from "./TablePagination";
 import { useOpen } from "@/app/lib/hook/open";
 import ItemViewerDrawer from "./ItemViewerDrawer";
 import { humanFileSize } from "@/app/lib/utils/format";
+import { getTableInfo } from "@/app/lib/utils/tableUtils";
 
 function keySchemaToColumns(item: GlobalSecondaryIndexDescription): MyColumn[] {
   if (!item.KeySchema) {
@@ -78,18 +79,10 @@ export default function TableScan({
   if (!table) {
     return <div>Table not found</div>;
   }
+  const tableInfo = getTableInfo(table);
 
-  const pk = table.KeySchema?.find(
-    (key) => key.KeyType === "HASH",
-  )?.AttributeName;
-
-  if (!pk) {
-    return <div>Table does not have a primary key</div>;
-  }
-
-  const sk = table.KeySchema?.find(
-    (key) => key.KeyType === "RANGE",
-  )?.AttributeName;
+  const pk = tableInfo.pk;
+  const sk = tableInfo.sk;
 
   let gsiColumns: ColumnType<RecordType>[] = [];
   const gsiIndexes = (table.GlobalSecondaryIndexes ?? []).filter(
@@ -254,7 +247,11 @@ export default function TableScan({
         }}
       />
 
-      <ItemViewerDrawer item={selectItem} {...itemDrawer} />
+      <ItemViewerDrawer
+        item={selectItem}
+        {...itemDrawer}
+        tableInfo={tableInfo}
+      />
 
       <TablePagination LastEvaluatedKey={data.LastEvaluatedKey} />
     </div>

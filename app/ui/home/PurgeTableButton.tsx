@@ -38,7 +38,7 @@ export default function PurgeTableButton({
         _purgeTables({ tables: [table] });
       }}
     >
-      <Button type={type} icon={<ClearOutlined />} loading={loading}>
+      <Button type={type} danger icon={<ClearOutlined />} loading={loading}>
         Purge
       </Button>
     </Popconfirm>
