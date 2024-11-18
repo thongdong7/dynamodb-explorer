@@ -7,6 +7,7 @@ import { TableDescription } from "@aws-sdk/client-dynamodb";
 import { App, Button, Form } from "antd";
 import JSONEditor from "../common/JSONEditor";
 import FormAction from "../form/FormAction";
+import { SaveOutlined } from "@ant-design/icons";
 
 function typeToInitValue(type: "S" | "N" | "B" | undefined) {
   switch (type) {
@@ -55,7 +56,7 @@ export default function PutItemForm({
       render={() => (
         <>
           <Form.Item>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" icon={<SaveOutlined />}>
               Save
             </Button>
           </Form.Item>
