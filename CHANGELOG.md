@@ -1,3 +1,23 @@
+# [1.1.0](https://github.com/thongdong7/dynamodb-explorer/compare/v1.0.5...v1.1.0) (2024-11-18)
+
+
+### Bug Fixes
+
+* add icon for save button in update item form ([677bc47](https://github.com/thongdong7/dynamodb-explorer/commit/677bc47d2a2cf9f2e329640ef992ebe49bbdb124))
+* refactor page heading, update home layout ([0042f65](https://github.com/thongdong7/dynamodb-explorer/commit/0042f6507ca33a4fe155c3acf687c2efb7850b75))
+* show no data when table is empty ([fa776f0](https://github.com/thongdong7/dynamodb-explorer/commit/fa776f0c32f336cf445f4ed92257cd1d792ddc56))
+* validate table name when create table ([56c1b9d](https://github.com/thongdong7/dynamodb-explorer/commit/56c1b9d47a62de62c7e0a774dc0ec1839e195060))
+
+
+### Features
+
+* add create table save icon, update theme ([5d8197d](https://github.com/thongdong7/dynamodb-explorer/commit/5d8197d3b9964d02d2051b2fd025f84800c3d72f))
+* change default tab of item viewer to Formatted ([2ea4d6f](https://github.com/thongdong7/dynamodb-explorer/commit/2ea4d6f465afd6e6a706c0a8bc303bf7795a4d5d))
+* Create item, edit item ([819349f](https://github.com/thongdong7/dynamodb-explorer/commit/819349ff55b0715c38e3a7d558dae76fdaa2152e))
+* Create table ([afbc819](https://github.com/thongdong7/dynamodb-explorer/commit/afbc8193e52717b1cfe948bdafecfcd0380d7955))
+* purge and delete tables in home page ([dff5ca9](https://github.com/thongdong7/dynamodb-explorer/commit/dff5ca9f19737f02ea38620884343d303d47bf87))
+* show table info ([1f543a4](https://github.com/thongdong7/dynamodb-explorer/commit/1f543a4df4220f697bb5d72640e9837a73b55d5d))
+
 ## [1.0.5](https://github.com/thongdong7/dynamodb-explorer/compare/v1.0.4...v1.0.5) (2024-11-13)
 
 
