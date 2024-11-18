@@ -6,6 +6,7 @@ import { App, Button, Form, Input } from "antd";
 import FormAction from "../../form/FormAction";
 import SecondIndexFormItem from "./SecondIndexFormItem";
 import SelectAttrType from "./SelectAttrType";
+import { SaveOutlined } from "@ant-design/icons";
 
 export default function TableCreateForm() {
   const { message } = App.useApp();
@@ -32,7 +33,7 @@ export default function TableCreateForm() {
           <>
             <Form.Item
               name="TableName"
-              label="Table Name1"
+              label="Table Name"
               required
               rules={[
                 {
@@ -136,6 +137,7 @@ export default function TableCreateForm() {
                 htmlType="submit"
                 loading={loading}
                 className="mt-2"
+                icon={<SaveOutlined />}
               >
                 Create Table
               </Button>

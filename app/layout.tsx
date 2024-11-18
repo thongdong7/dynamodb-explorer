@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import LayoutApp from "./ui/common/LayoutApp";
+import { ConfigProvider } from "antd";
 
 export const dynamic = "force-dynamic";
 
@@ -33,7 +34,25 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AntdRegistry>
-          <LayoutApp>{children}</LayoutApp>
+          <ConfigProvider
+            theme={{
+              token: {
+                // Seed Token
+                colorPrimary: "#00b96b",
+                borderRadius: 2,
+
+                // Alias Token
+                // colorBgContainer: "#f6ffed",
+              },
+              components: {
+                Button: {
+                  borderRadius: 9999,
+                },
+              },
+            }}
+          >
+            <LayoutApp>{children}</LayoutApp>
+          </ConfigProvider>
         </AntdRegistry>
       </body>
     </html>
