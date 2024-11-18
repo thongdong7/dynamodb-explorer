@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/thongdong7/dynamodb-explorer/compare/v1.1.1...v1.1.2) (2024-11-18)
+
+
+### Bug Fixes
+
+* Change the default port to 8001, update the document [#2](https://github.com/thongdong7/dynamodb-explorer/issues/2) ([4d53e46](https://github.com/thongdong7/dynamodb-explorer/commit/4d53e4673b736481a585a47f5602790c527a6e82))
+
 ## [1.1.1](https://github.com/thongdong7/dynamodb-explorer/compare/v1.1.0...v1.1.1) (2024-11-18)
 
 
