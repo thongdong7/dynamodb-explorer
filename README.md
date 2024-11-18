@@ -1,9 +1,16 @@
-> GUI for DynamoDB Local, dynalite, localstack etc.
+> Another GUI for DynamoDB Local, dynalite, localstack etc.
 
 ## Usage
 
-Assume that we have DynamoDB run use `localstack` at `http://localhost:4566`
-
 ```bash
-DYNAMO_ENDPOINT=http://localhost:4566 npx @thongdong7/dynamodb-explorer
+npx @thongdong7/dynamodb-explorer --dynamo-endpoint=http://localhost:8000
 ```
+
+Options:
+
+- `-v` / `--version`: output the current version
+- `-p <port>` / `--port <port>`: port to listen on (default: "8001")
+- `-H <host>` / `--host <host>`: host to listen on (default: "localhost")
+- `-e <endpoint>` / `--dynamo-endpoint <endpoint>`: DynamoDB endpoint (default:
+  "http://localhost:8000")
+- `-h` / `--help`: display help for command
