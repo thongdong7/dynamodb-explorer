@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/thongdong7/dynamodb-explorer/compare/v1.1.2...v1.1.3) (2024-11-18)
+
+
+### Bug Fixes
+
+* error cannot find module commander [#2](https://github.com/thongdong7/dynamodb-explorer/issues/2) ([2a45643](https://github.com/thongdong7/dynamodb-explorer/commit/2a456435827d280dbf424cedc82e2fcbd6d90b87))
+
 ## [1.1.2](https://github.com/thongdong7/dynamodb-explorer/compare/v1.1.1...v1.1.2) (2024-11-18)
 
 
