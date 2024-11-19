@@ -1,10 +1,13 @@
-import { AttributeValue } from "@aws-sdk/client-dynamodb";
-import { Button, Drawer, Space, Tabs } from "antd";
-import JsonView from "@uiw/react-json-view";
-import { darkTheme } from "@uiw/react-json-view/dark";
-import MyJsonViewer from "../../common/MyJsonViewer";
-import { TableInfo, tableInfoKeyQueryString } from "@/app/lib/utils/tableUtils";
+import {
+  getTableKey,
+  TableInfo,
+  tableInfoKeyQueryString,
+} from "@/app/lib/utils/tableUtils";
 import { EditOutlined } from "@ant-design/icons";
+import { AttributeValue } from "@aws-sdk/client-dynamodb";
+import { App, Button, Drawer, Space, Tabs } from "antd";
+import MyJsonViewer from "../../common/MyJsonViewer";
+import DeleteItemButton from "./DeleteItemButton";
 
 function formatItem(item: Record<string, AttributeValue>) {
   let ret: Record<string, any> = {};
@@ -28,17 +31,20 @@ export default function ItemViewerDrawer({
   onClose,
   open,
   tableInfo,
+  onDeleted,
 }: {
   item?: Record<string, AttributeValue>;
   onClose: () => void;
   open: boolean;
   tableInfo: TableInfo;
+  onDeleted: (item: Record<string, AttributeValue>) => void;
 }) {
   if (!item) {
     return null;
   }
 
   const formattedItem = formatItem(item);
+  const { message } = App.useApp();
 
   return (
     <Drawer
@@ -54,6 +60,15 @@ export default function ItemViewerDrawer({
           >
             Edit
           </Button>
+          <DeleteItemButton
+            tableName={tableInfo.name}
+            itemKey={getTableKey(tableInfo, formattedItem)}
+            onDeleted={() => {
+              message.success("Item deleted successfully");
+              onClose();
+              onDeleted(item);
+            }}
+          />
         </Space>
       }
     >

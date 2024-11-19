@@ -11,7 +11,7 @@ import {
 import { Button, Checkbox, Space } from "antd";
 import { ColumnType } from "antd/es/table";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AttributesView from "./AttributesView";
 import RecordValue, { getValue } from "./RecordValue";
 import Table, { Column } from "./Table";
@@ -109,18 +109,26 @@ export default function TableScan({
   ];
   const keyFieldsSet = new Set(keyFields);
 
+  const [items, setItems] = useState<
+    Record<string, AttributeValue>[] | undefined
+  >(data.Items);
+
+  useEffect(() => {
+    setItems(data.Items);
+  }, [data.Items]);
+
   // Find fields appearing in all items and not in the key fields
   // This is used to display the attributes
   const allFields = new Set<string>();
   let hasOtherAttributes = false;
-  if (data.Items && data.Items.length > 0) {
-    Object.keys(data.Items![0]).forEach((key) => {
+  if (items && items.length > 0) {
+    Object.keys(items![0]).forEach((key) => {
       if (!keyFieldsSet.has(key)) {
         allFields.add(key);
       }
     });
 
-    data.Items.slice(1).forEach((item) => {
+    items.slice(1).forEach((item) => {
       // Remove fields that are not in the current item
       allFields.forEach((field) => {
         if (!(field in item)) {
@@ -236,7 +244,7 @@ export default function TableScan({
 
       <Table
         columns={columns}
-        dataSource={data.Items}
+        dataSource={items}
         onRow={(record, rowIndex) => {
           return {
             onClick: (event) => {
@@ -251,6 +259,10 @@ export default function TableScan({
         item={selectItem}
         {...itemDrawer}
         tableInfo={tableInfo}
+        onDeleted={() => {
+          const nextItems = items?.filter((item) => item !== selectItem);
+          setItems(nextItems);
+        }}
       />
 
       <TablePagination LastEvaluatedKey={data.LastEvaluatedKey} />

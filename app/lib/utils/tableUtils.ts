@@ -50,3 +50,12 @@ export function tableInfoKeyQueryString(
   }
   return params.toString();
 }
+
+export function getTableKey(tableInfo: TableInfo, item: Record<string, any>) {
+  const key: Record<string, any> = {};
+  key[tableInfo.pk] = item[tableInfo.pk];
+  if (tableInfo.sk) {
+    key[tableInfo.sk] = item[tableInfo.sk];
+  }
+  return key;
+}
