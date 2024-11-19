@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/thongdong7/dynamodb-explorer/compare/v1.1.3...v1.2.0) (2024-11-19)
+
+
+### Features
+
+* Delete button when view item [#5](https://github.com/thongdong7/dynamodb-explorer/issues/5) ([8ff7f9f](https://github.com/thongdong7/dynamodb-explorer/commit/8ff7f9f07e20218a67221f16c2cf4928668a9dfc))
+
 ## [1.1.3](https://github.com/thongdong7/dynamodb-explorer/compare/v1.1.2...v1.1.3) (2024-11-18)
 
 
