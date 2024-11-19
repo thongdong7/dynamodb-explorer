@@ -14,7 +14,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import AttributesView from "./AttributesView";
 import RecordValue, { getValue } from "./RecordValue";
-import Table, { Column } from "./Table";
+import SingleTable, { Column } from "../../single-table/SingleTable";
 import TablePagination from "./TablePagination";
 import { useOpen } from "@/app/lib/hook/open";
 import ItemViewerDrawer from "./ItemViewerDrawer";
@@ -173,6 +173,7 @@ export default function TableScan({
             ellipsis: true,
             isSK: true,
             noWrap: true,
+            freeze: true,
           },
         ]
       : []),
@@ -242,7 +243,7 @@ export default function TableScan({
         </Space>
       </div>
 
-      <Table
+      <SingleTable
         columns={columns}
         dataSource={items}
         onRow={(record, rowIndex) => {
