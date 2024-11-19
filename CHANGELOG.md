@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/thongdong7/dynamodb-explorer/compare/v1.2.0...v1.3.0) (2024-11-19)
+
+
+### Features
+
+* Freeze both pk and sk column [#6](https://github.com/thongdong7/dynamodb-explorer/issues/6) ([807f330](https://github.com/thongdong7/dynamodb-explorer/commit/807f33010115736344d2a50e99170cd01824cf17))
+
 # [1.2.0](https://github.com/thongdong7/dynamodb-explorer/compare/v1.1.3...v1.2.0) (2024-11-19)
 
 
