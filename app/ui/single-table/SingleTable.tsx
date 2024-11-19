@@ -17,7 +17,7 @@ export default function SingleTable<RecordType>({
   dataSource?: RecordType[];
   onRow?: TableProps<RecordType>["onRow"];
 }) {
-  const firstColumnRef = useRef<HTMLTableCellElement | null>(null);
+  const freezeColumnsRef = useRef<HTMLTableCellElement[]>([]);
 
   return (
     <div>
@@ -27,17 +27,22 @@ export default function SingleTable<RecordType>({
             {columns.map(({ title, freeze, hidden }, i) => (
               <th
                 key={i}
-                ref={i === 0 ? firstColumnRef : undefined}
+                ref={(el) => {
+                  if (freeze && freezeColumnsRef.current && el) {
+                    freezeColumnsRef.current[i] = el;
+                  }
+                }}
                 className={clsx("p-2 text-slate-900 text-left", {
                   "sticky bg-gray-200 z-10": freeze,
                   hidden: hidden,
                   "left-0": freeze && i === 0,
                 })}
                 style={{
-                  left:
-                    freeze && i === 1
-                      ? firstColumnRef.current?.offsetWidth
-                      : undefined,
+                  left: freeze
+                    ? freezeColumnsRef.current
+                        .slice(0, i)
+                        .reduce((acc, el) => acc + el.offsetWidth, 0)
+                    : undefined,
                 }}
               >
                 {title as ReactNode}
@@ -78,10 +83,11 @@ export default function SingleTable<RecordType>({
                         },
                       )}
                       style={{
-                        left:
-                          freeze && j === 1
-                            ? firstColumnRef.current?.offsetWidth
-                            : undefined,
+                        left: freeze
+                          ? freezeColumnsRef.current
+                              .slice(0, j)
+                              .reduce((acc, el) => acc + el.offsetWidth, 0)
+                          : undefined,
                       }}
                     >
                       <ColumnContent column={column} record={item} index={i} />
