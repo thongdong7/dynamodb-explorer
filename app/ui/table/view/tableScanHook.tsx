@@ -114,31 +114,48 @@ export function useTableInfo(
   const allAttributes = tableInfo.attributes.concat(attributes);
   const sameAttributes = allAttributes;
   const sameAttributesSet = new Set(allAttributes.map((attr) => attr.name));
-  const gsiIndexes = useGSIIndexHook(tableInfo);
+  const gsiIndexes = useGSIIndexHook(tableInfo, {
+    onChange: (ignoreFields, showFields) => {
+      table.setColumnVisibility((prev) => {
+        const newColumnVisibility = { ...prev };
+        ignoreFields.forEach((field) => {
+          newColumnVisibility[field] = false;
+        });
+        showFields.forEach((field) => {
+          newColumnVisibility[field] = true;
+        });
+        return newColumnVisibility;
+      });
+    },
+  });
+  const columnVisibility: Record<string, boolean> = {};
+  // Hide gsiIndexes.ignoreFields columns
+  tableInfo.attributes.forEach((attr) => {
+    columnVisibility[attr.name] = !gsiIndexes.ignoreFields.includes(attr.name);
+  });
+
   const columns: MRT_ColumnDef<RecordWithID>[] = [
-    ...tableInfo.attributes
-      .filter((attr) => !gsiIndexes.ignoreFields.includes(attr.name))
-      .map(
-        (attr) =>
-          ({
-            accessorKey: `${attr.name}`,
-            header: attr.name,
-            enableClickToCopy: true,
-            Cell:
-              attr.kind === "pk" || attr.kind === "gsiPk"
-                ? ({ cell }) => (
-                    <SearchValue
-                      column={{
-                        dataIndex: attr.name,
-                        indexName: attr.indexName,
-                      }}
-                      value={cell.getValue<any>()}
-                    />
-                  )
-                : undefined,
-            size: 0,
-          }) as MRT_ColumnDef<RecordWithID>,
-      ),
+    ...tableInfo.attributes.map(
+      (attr) =>
+        ({
+          accessorKey: `${attr.name}`,
+          header: attr.name,
+          enableClickToCopy: true,
+          Cell:
+            attr.kind === "pk" || attr.kind === "gsiPk"
+              ? ({ cell }) => (
+                  <SearchValue
+                    column={{
+                      dataIndex: attr.name,
+                      indexName: attr.indexName,
+                    }}
+                    value={cell.getValue<any>()}
+                  />
+                )
+              : undefined,
+          size: 0,
+        }) as MRT_ColumnDef<RecordWithID>,
+    ),
     ...attributes.map((attr) => {
       return {
         accessorKey: `${attr.name}`,
@@ -301,6 +318,7 @@ export function useTableInfo(
     ),
     initialState: {
       density: "xs",
+      columnVisibility,
     },
 
     displayColumnDefOptions: {

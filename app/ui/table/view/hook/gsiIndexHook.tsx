@@ -2,7 +2,12 @@ import { TableInfo } from "@/app/lib/utils/tableUtils";
 import { Space, Checkbox } from "antd";
 import { useState } from "react";
 
-export default function useGSIIndexHook(tableInfo: TableInfo) {
+export default function useGSIIndexHook(
+  tableInfo: TableInfo,
+  {
+    onChange,
+  }: { onChange: (ignoreFields: string[], showFields: string[]) => void },
+) {
   const [selectedIndexes, setSelectedIndexes] = useState<string[]>([]);
 
   return {
@@ -19,13 +24,23 @@ export default function useGSIIndexHook(tableInfo: TableInfo) {
                 key={gsi.name}
                 checked={selectedIndexes.includes(gsi.name)}
                 onChange={(e) => {
+                  let newIndexes: string[] = [];
                   if (e.target.checked) {
-                    setSelectedIndexes([...selectedIndexes, gsi.name]);
+                    newIndexes = [...selectedIndexes, gsi.name];
                   } else {
-                    setSelectedIndexes(
-                      selectedIndexes.filter((name) => name !== gsi.name),
+                    newIndexes = selectedIndexes.filter(
+                      (name) => name !== gsi.name,
                     );
                   }
+                  setSelectedIndexes(newIndexes);
+                  const ignoreFields = tableInfo.gsiIndexes
+                    .filter((gsi) => !newIndexes.includes(gsi.name))
+                    .flatMap((gsi) => [gsi.pk, ...(gsi.sk ? [gsi.sk] : [])]);
+                  const showFields = tableInfo.gsiIndexes
+                    .filter((gsi) => newIndexes.includes(gsi.name))
+                    .flatMap((gsi) => [gsi.pk, ...(gsi.sk ? [gsi.sk] : [])]);
+
+                  onChange(ignoreFields, showFields);
                 }}
               >
                 {gsi.name}
