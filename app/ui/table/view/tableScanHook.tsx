@@ -37,20 +37,12 @@ function buildID(item: RecordType, tableInfo: TableInfo): RecordWithID {
 }
 
 function buildIDs(items: RecordType[], tableInfo: TableInfo): RecordWithID[] {
-  // console.log("buildIDs");
   return items.map((item) => buildID(item, tableInfo));
-  // return items.map((item, i) => ({
-  //   [$id]: String(i),
-  //   pk: "User " + i,
-  // }));
 }
 
 export interface TableScanHook {
-  // columns: MRT_ColumnDef<RecordWithID>[];
-  // items: RecordWithID[];
   sameAttributes: MyAttribute[];
   sameAttributesSet: Set<string>;
-  // tableInfo: TableInfo;
   itemDrawer: OpenHook;
   selectItem: RecordWithID | undefined;
   setSelectItem: (item: RecordWithID) => void;
