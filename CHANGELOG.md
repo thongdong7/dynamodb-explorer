@@ -4,6 +4,19 @@
 ### Bug Fixes
 
 * allow to filter by pk ([a317b2c](https://github.com/thongdong7/dynamodb-explorer/commit/a317b2c84baa37866920f664b3b1ac6252b4faa2))
+* remove page create and edit item ([51f56f8](https://github.com/thongdong7/dynamodb-explorer/commit/51f56f8fffa1c9466b6e92727cfd660e1e436efd))
+
+
+### Features
+
+* allow to change column size, filter at client and other ui update for table view ([40011d9](https://github.com/thongdong7/dynamodb-explorer/commit/40011d9024557e6652452d09909ab2be5a39126c))
+
+# [1.4.0](https://github.com/thongdong7/dynamodb-explorer/compare/v1.3.0...v1.4.0) (2024-11-26)
+
+
+### Bug Fixes
+
+* allow to filter by pk ([a317b2c](https://github.com/thongdong7/dynamodb-explorer/commit/a317b2c84baa37866920f664b3b1ac6252b4faa2))
 
 
 ### Features
