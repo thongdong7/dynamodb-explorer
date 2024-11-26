@@ -1,3 +1,10 @@
+## [1.5.2](https://github.com/thongdong7/dynamodb-explorer/compare/v1.5.1...v1.5.2) (2024-11-26)
+
+
+### Bug Fixes
+
+* reduce action, selection, pk, sk column size ([a145b84](https://github.com/thongdong7/dynamodb-explorer/commit/a145b84e1ea54142a2ef16022b1837806f576815))
+
 ## [1.5.1](https://github.com/thongdong7/dynamodb-explorer/compare/v1.5.0...v1.5.1) (2024-11-26)
 
 
