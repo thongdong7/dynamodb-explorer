@@ -17,7 +17,11 @@ export default function Home({ data }: { data: ListTablesResult }) {
   const router = useRouter();
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
   const { message } = App.useApp();
-  const { loading: deleting, run: _deleteTables } = useAction({
+  const { loading: deleting, run: _deleteTables } = useAction<
+    { tables: string[] },
+    void,
+    {}
+  >({
     action: deleteTablesAPI,
     onSuccess: () => {
       message.success(`Tables deleted`);
@@ -25,7 +29,11 @@ export default function Home({ data }: { data: ListTablesResult }) {
       router.refresh();
     },
   });
-  const { loading: purging, run: _purgeTables } = useAction({
+  const { loading: purging, run: _purgeTables } = useAction<
+    { tables: string[] },
+    void,
+    {}
+  >({
     action: purgeTablesAPI,
     onSuccess: () => {
       message.success(`Tables purged`);

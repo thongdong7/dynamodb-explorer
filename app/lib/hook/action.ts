@@ -72,7 +72,11 @@ export interface UseActionHook<TValues, Result> {
   params: TValues | undefined;
   setParams: (params: TValues | undefined) => void;
 }
-export function useAction<TValues, Result, TExtraValues extends {}>({
+export function useAction<
+  TValues extends {},
+  Result,
+  TExtraValues extends {} = {},
+>({
   action,
   onSuccess,
   beforeRun,

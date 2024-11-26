@@ -18,7 +18,7 @@ export default function DeleteTableButton({
     loading,
     error,
     run: _deleteTables,
-  } = useAction({
+  } = useAction<{ tables: string[] }, void, {}>({
     action: deleteTablesAPI,
     onSuccess: () => {
       message.success(`Table ${table} deleted`);

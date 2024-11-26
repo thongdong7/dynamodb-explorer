@@ -1,8 +1,6 @@
 import { useNav } from "@/app/lib/hook/nav";
 import { SearchOutlined } from "@ant-design/icons";
 import { Button } from "antd";
-import { ReactNode } from "react";
-import { getValue } from "../RecordValue";
 
 export default function SearchValue({
   column,
@@ -12,7 +10,7 @@ export default function SearchValue({
     dataIndex: string;
     indexName?: string;
   };
-  value?: ReactNode;
+  value?: any;
 }) {
   const { changeParams } = useNav();
   const { dataIndex, indexName } = column;
@@ -31,7 +29,7 @@ export default function SearchValue({
           changeParams({
             indexName,
             pkField: dataIndex as string,
-            pkValue: getValue(value) as string,
+            pkValue: value as string,
           });
         }}
       />

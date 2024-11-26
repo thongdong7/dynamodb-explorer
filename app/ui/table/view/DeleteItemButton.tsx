@@ -14,7 +14,11 @@ export default function DeleteItemButton({
 }) {
   const { modal } = App.useApp();
 
-  const { loading, run: _deleteItem } = useAction({
+  const { loading, run: _deleteItem } = useAction<
+    { tableName: string; key: Record<string, any> },
+    true,
+    {}
+  >({
     action: deleteItemAPI,
     onSuccess: async () => {
       onDeleted && onDeleted();

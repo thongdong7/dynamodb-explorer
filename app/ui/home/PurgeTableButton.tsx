@@ -18,7 +18,7 @@ export default function PurgeTableButton({
     loading,
     error,
     run: _purgeTables,
-  } = useAction({
+  } = useAction<{ tables: string[] }, void, {}>({
     action: purgeTablesAPI,
     onSuccess: () => {
       message.success(`Table ${table} purged`);
