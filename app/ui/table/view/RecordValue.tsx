@@ -1,34 +1,37 @@
 import { AttributeValue } from "@aws-sdk/client-dynamodb";
+import { ReactNode } from "react";
 
-function cutString(str: string, length: number) {
-  if (str.length > length) {
-    return str.slice(0, length) + "...";
-  }
-  return str;
-}
-
-export default function RecordValue({ value }: { value?: AttributeValue }) {
+export default function RecordValue({
+  value,
+}: {
+  value?: AttributeValue | string;
+}): ReactNode {
   if (typeof value === "undefined") {
     return <center className="text-gray-300">-</center>;
   }
+
+  if (typeof value === "string") {
+    return value;
+  }
+
   if (value.S) {
+    return <span style={{ color: "#CE9178" }}>{value.S}</span>;
+  }
+  if (value.N) {
     return (
-      <span className="truncate max-w-28" title={value.S as string}>
-        {cutString(value.S, 28)}
+      <span title={value.N} style={{ color: "#B5CEA8" }}>
+        {value.N}
       </span>
     );
   }
-  if (value.N) {
-    return <span title={value.N}>{value.N}</span>;
-  }
   if (value.B) {
-    return <span>{value.B}</span>;
+    return <span style={{ color: "#569CD6" }}>{value.B}</span>;
   }
   if (value.BOOL) {
-    return <span>{value.BOOL}</span>;
+    return <span style={{ color: "#569CD6" }}>{value.BOOL}</span>;
   }
   if (value.NULL) {
-    return <span>null</span>;
+    return <span style={{ color: "#569CD6" }}>null</span>;
   }
   if (value.L) {
     return <span>{JSON.stringify(value.L)}</span>;

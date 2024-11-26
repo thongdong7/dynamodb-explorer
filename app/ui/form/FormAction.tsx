@@ -1,7 +1,7 @@
 "use client";
 import { FormActionProps, useFormAction } from "@/app/lib/hook/action";
 import { Alert, Form, FormProps } from "antd";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 
 export default function FormAction<TValues, Output, TExtraValues extends {}>({
   render,
@@ -22,6 +22,10 @@ export default function FormAction<TValues, Output, TExtraValues extends {}>({
     onSuccess,
     extraValues,
   });
+
+  useEffect(() => {
+    form.resetFields();
+  }, [props.initialValues]);
   return (
     <Form form={form} onFinish={onFinish} layout="vertical" {...props}>
       {error && (

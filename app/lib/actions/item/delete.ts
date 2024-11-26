@@ -1,11 +1,13 @@
 "use server";
 
 import { DeleteCommand } from "@aws-sdk/lib-dynamodb";
+import { z } from "zod";
+import { apiAction } from "../../utils/apiUtils";
+import { batchDeleteItems } from "../../utils/dynamodb/batchUtils";
+import { getDocClient } from "../../utils/dynamodb/clientUtils";
 import { getTableInfo } from "../../utils/tableUtils";
 import { describeTable } from "../tables/describe";
-import { getDocClient } from "../../utils/clientUtils";
-import { apiAction } from "../../utils/apiUtils";
-import { z } from "zod";
+import { batchDocDeleteItems } from "../../utils/dynamodb/batchDocUtils";
 
 export const deleteItemAPI = apiAction()
   .schema(z.object({ tableName: z.string(), key: z.record(z.any()) }))
@@ -29,6 +31,16 @@ export const deleteItemAPI = apiAction()
         Key: _key,
       }),
     );
+
+    return true as const;
+  });
+
+export const deleteItemsAPI = apiAction()
+  .schema(z.object({ tableName: z.string(), keys: z.array(z.record(z.any())) }))
+  .inputType()
+  .onExecute(async ({ values: { tableName, keys } }) => {
+    // console.log("deleteItemsAPI", tableName, keys);
+    await batchDocDeleteItems(keys, tableName);
 
     return true as const;
   });

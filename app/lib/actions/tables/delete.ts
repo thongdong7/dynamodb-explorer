@@ -3,7 +3,7 @@
 import { DeleteTableCommand } from "@aws-sdk/client-dynamodb";
 import { z } from "zod";
 import { apiAction } from "../../utils/apiUtils";
-import { getClient } from "../../utils/clientUtils";
+import { getClient } from "../../utils/dynamodb/clientUtils";
 
 export const deleteTablesAPI = apiAction()
   .schema(

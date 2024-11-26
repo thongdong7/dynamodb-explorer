@@ -1,7 +1,7 @@
 "use server";
 
 import { GetCommand } from "@aws-sdk/lib-dynamodb";
-import { getDocClient } from "../../utils/clientUtils";
+import { getDocClient } from "../../utils/dynamodb/clientUtils";
 import { getTableInfo } from "../../utils/tableUtils";
 import { describeTable } from "../tables/describe";
 

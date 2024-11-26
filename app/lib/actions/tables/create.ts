@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { apiAction } from "../../utils/apiUtils";
-import { getClient } from "../../utils/clientUtils";
+import { getClient } from "../../utils/dynamodb/clientUtils";
 import {
   CreateTableCommand,
   CreateTableCommandInput,

@@ -2,12 +2,11 @@
 
 import {
   DescribeTableCommand,
-  DescribeTableCommandOutput,
   ListTablesCommand,
   ListTablesCommandOutput,
   TableDescription,
 } from "@aws-sdk/client-dynamodb";
-import { getClient } from "../../utils/clientUtils";
+import { getClient } from "../../utils/dynamodb/clientUtils";
 
 export interface ListTablesResult extends ListTablesCommandOutput {
   tables: TableDescription[];

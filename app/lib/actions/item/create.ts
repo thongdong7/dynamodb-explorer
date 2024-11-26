@@ -1,10 +1,9 @@
 "use server";
 
+import { PutCommand } from "@aws-sdk/lib-dynamodb";
 import { z } from "zod";
 import { apiAction } from "../../utils/apiUtils";
-import { getClient, getDocClient } from "../../utils/clientUtils";
-import { PutItemCommand } from "@aws-sdk/client-dynamodb";
-import { PutCommand } from "@aws-sdk/lib-dynamodb";
+import { getDocClient } from "../../utils/dynamodb/clientUtils";
 
 export const putItemAPI = apiAction()
   .schema(

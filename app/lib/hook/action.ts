@@ -63,13 +63,26 @@ export function useFormAction<TValues, Output, TExtraValues extends {}>({
   };
 }
 
-export function useAction<TValues, Result>({
+export interface UseActionHook<TValues, Result> {
+  loading: boolean;
+  error: string | null;
+  run: (values: TValues) => Promise<Result | undefined>;
+  result: Result | undefined;
+  setResult: (result: Result | undefined) => void;
+  params: TValues | undefined;
+  setParams: (params: TValues | undefined) => void;
+}
+export function useAction<TValues, Result, TExtraValues extends {}>({
   action,
   onSuccess,
+  beforeRun,
+  extraValues = {} as TExtraValues,
 }: {
-  action: (values: TValues) => Promise<APIResult<Result>>;
+  action: (values: TValues & TExtraValues) => Promise<APIResult<Result>>;
+  beforeRun?: (values: TValues) => void;
   onSuccess?: (data: Result, values: TValues) => void;
-}) {
+  extraValues?: TExtraValues;
+}): UseActionHook<TValues, Result> {
   const { message } = App.useApp();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -81,7 +94,11 @@ export function useAction<TValues, Result>({
       setLoading(true);
       setError(null);
       setParams(values);
-      const response = await action(values);
+      beforeRun && beforeRun(values);
+      const response = await action(
+        // @ts-expect-error
+        extraValues ? { ...values, ...extraValues } : values,
+      );
       if (response.ok === false) {
         let error;
         if (response.errors) {

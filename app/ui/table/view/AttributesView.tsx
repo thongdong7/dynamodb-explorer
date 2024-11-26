@@ -9,6 +9,7 @@ export default function AttributesView({
   item: Record<string, AttributeValue>;
 }) {
   const keys = Object.keys(item).filter((key) => !ignoreFields.has(key));
+
   return (
     <table className="border-collapse table-auto w-full text-sm -mt-px -mb-px">
       <thead>
@@ -18,7 +19,7 @@ export default function AttributesView({
               key={key}
               className="border border-t-0 border-b-0 text-xs p-1 bg-slate-400"
             >
-              {key}
+              <div className="w-44">{key}</div>
             </th>
           ))}
         </tr>
@@ -26,7 +27,10 @@ export default function AttributesView({
       <tbody>
         <tr>
           {keys.map((key) => (
-            <td key={key} className="border px-1">
+            <td
+              key={key}
+              className="border px-1 max-w-44 text-ellipsis overflow-hidden"
+            >
               <RecordValue value={item[key]} />
             </td>
           ))}

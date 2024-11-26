@@ -2,7 +2,7 @@ import { Alert, Result } from "antd";
 import { ReactNode } from "react";
 import { z } from "zod";
 import { APIError } from "./apiUtils";
-import { loadDynamoConfig } from "./clientUtils";
+import { loadDynamoConfig } from "./dynamodb/clientUtils";
 
 type PageProps = {
   params: {};

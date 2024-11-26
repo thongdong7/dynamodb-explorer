@@ -25,3 +25,16 @@ body {
     @apply container max-w-5xl mx-auto;
   }
 }
+
+.mantine-Checkbox-input {
+  @apply rounded-sm cursor-pointer w-4 h-4;
+}
+
+.mantine-Checkbox-inner {
+  @apply w-4 h-4;
+}
+
+.mantine-Table-root > thead > tr > th:nth-child(2),
+.mantine-Table-root > tbody > tr > td:nth-child(2) {
+  @apply px-0;
+}

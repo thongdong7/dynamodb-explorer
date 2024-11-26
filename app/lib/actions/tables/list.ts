@@ -8,7 +8,11 @@ import {
   ScanCommandInput,
   ScanCommandOutput,
 } from "@aws-sdk/client-dynamodb";
-import { getClient } from "../../utils/clientUtils";
+import { getClient, getDocClient } from "../../utils/dynamodb/clientUtils";
+import {
+  ScanCommand as DocScanCommand,
+  ScanCommandOutput as DocScanCommandOutput,
+} from "@aws-sdk/lib-dynamodb";
 
 export const scanTable = async (
   tableName: string,
@@ -19,6 +23,19 @@ export const scanTable = async (
     ...options,
   });
   const res = await getClient().send(command);
+
+  return res;
+};
+
+export const scanDocTable = async (
+  tableName: string,
+  options: Partial<Omit<ScanCommandInput, "TableName">> = {},
+): Promise<DocScanCommandOutput> => {
+  const command = new DocScanCommand({
+    TableName: tableName,
+    ...options,
+  });
+  const res = await getDocClient().send(command);
 
   return res;
 };

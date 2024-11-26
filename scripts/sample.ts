@@ -1,4 +1,4 @@
-import { getClient } from "@/app/lib/utils/clientUtils";
+import { getClient } from "@/app/lib/utils/dynamodb/clientUtils";
 import {
   BatchWriteItemCommand,
   PutItemCommand,

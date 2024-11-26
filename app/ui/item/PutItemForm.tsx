@@ -1,13 +1,11 @@
 "use client";
 
 import { putItemAPI } from "@/app/lib/actions/item/create";
-import { useBackRefresh } from "@/app/lib/hook/backRefresh";
-import { getTableInfo, TableInfo } from "@/app/lib/utils/tableUtils";
-import { TableDescription } from "@aws-sdk/client-dynamodb";
+import { TableInfo } from "@/app/lib/utils/tableUtils";
+import { SaveOutlined } from "@ant-design/icons";
 import { App, Button, Form } from "antd";
 import JSONEditor from "../common/JSONEditor";
 import FormAction from "../form/FormAction";
-import { SaveOutlined } from "@ant-design/icons";
 
 function typeToInitValue(type: "S" | "N" | "B" | undefined) {
   switch (type) {
@@ -32,26 +30,24 @@ function buildInitItem(tableInfo: TableInfo) {
 }
 
 export default function PutItemForm({
-  tableName,
-  table,
+  tableInfo,
   item,
+  onSuccess,
 }: {
-  tableName: string;
-  table: TableDescription;
+  tableInfo: TableInfo;
   item?: Record<string, any>;
+  onSuccess?: (values: Record<string, any>) => void;
 }) {
-  const tableInfo = getTableInfo(table);
   const { message } = App.useApp();
-  const backRefresh = useBackRefresh();
   return (
     <FormAction
       action={putItemAPI}
-      extraValues={{ TableName: tableName }}
+      extraValues={{ TableName: tableInfo.name }}
       initialValues={{ Item: item ? item : buildInitItem(tableInfo) }}
-      onSuccess={() => {
+      onSuccess={(data, values) => {
         message.success(`Item ${item ? "updated" : "created"} successfully`);
 
-        backRefresh();
+        onSuccess && onSuccess(values.Item);
       }}
       render={() => (
         <>
