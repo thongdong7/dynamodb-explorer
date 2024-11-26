@@ -34,7 +34,12 @@ body {
   @apply w-4 h-4;
 }
 
+.mantine-Table-root > thead > tr > th:nth-child(1),
+.mantine-Table-root > thead > tr > td:nth-child(1) {
+  @apply px-2;
+}
+
 .mantine-Table-root > thead > tr > th:nth-child(2),
 .mantine-Table-root > tbody > tr > td:nth-child(2) {
-  @apply px-0;
+  @apply !px-2 min-w-0 w-0;
 }

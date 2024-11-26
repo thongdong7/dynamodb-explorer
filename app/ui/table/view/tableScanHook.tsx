@@ -68,8 +68,6 @@ export function useTableInfo(
     onDeleteItems: (items: Record<string, any>[]) => void;
   },
 ): TableScanHook {
-  // console.log("called useTableInfo");
-
   const allFields = new Set<string>();
   const keyFieldsSet = new Set<string>(
     tableInfo.attributes.map((attr) => attr.name),
@@ -117,7 +115,6 @@ export function useTableInfo(
   const sameAttributes = allAttributes;
   const sameAttributesSet = new Set(allAttributes.map((attr) => attr.name));
   const gsiIndexes = useGSIIndexHook(tableInfo);
-  // console.log(gsiIndexes.ignoreFields);
   const columns: MRT_ColumnDef<RecordWithID>[] = [
     ...tableInfo.attributes
       .filter((attr) => !gsiIndexes.ignoreFields.includes(attr.name))
@@ -139,6 +136,7 @@ export function useTableInfo(
                     />
                   )
                 : undefined,
+            size: 0,
           }) as MRT_ColumnDef<RecordWithID>,
       ),
     ...attributes.map((attr) => {
@@ -146,11 +144,6 @@ export function useTableInfo(
         accessorKey: `${attr.name}`,
         header: attr.name,
         enableClickToCopy: true,
-        // mantineTableHeadCellProps: {
-        //   sx: {
-        //     padding: "0.75rem !important",
-        //   },
-        // },
       };
     }),
     {
@@ -176,6 +169,7 @@ export function useTableInfo(
         },
       },
       enableResizing: true,
+      size: 360,
     },
   ];
 
@@ -226,19 +220,12 @@ export function useTableInfo(
     enablePagination: false,
     enableColumnPinning: true,
     enableStickyHeader: true,
-    // enableRowNumbers: true,
     enableRowVirtualization: true,
     mantineTableContainerProps: {
       style: {
         maxHeight: "100%",
-        // height: "100%",
-        // width: "100%",
-        // backgroundColor: "red",
       },
     },
-    // onSortingChange: setSorting,
-    // state: { isLoading, sorting },
-    // rowVirtualizerInstanceRef, //optional
     rowVirtualizerProps: { overscan: 10 }, //optionally customize the row virtualizer
     columnVirtualizerProps: { overscan: 10 }, //optionally customize the column virtualizer
     enableRowSelection: true,
@@ -309,18 +296,6 @@ export function useTableInfo(
               setItems((prev) => [buildID(item, tableInfo), ...prev]);
             }}
           />
-          {/*   {tableInfo.ItemCount && (
-            <span>
-              Count: <b>{tableInfo.ItemCount.toLocaleString("en-US")}</b>
-            </span>
-          )}
-          {tableInfo.TableSizeBytes && (
-            <span>
-              Size: <b>{humanFileSize(tableInfo.TableSizeBytes)}</b>
-            </span>
-          )}
-          <TablePagination LastEvaluatedKey={data.LastEvaluatedKey} />
-           */}
         </div>
       </div>
     ),
@@ -328,28 +303,25 @@ export function useTableInfo(
       density: "xs",
     },
 
-    // displayColumnDefOptions: {
-    //   "mrt-row-expand": {
-    //     mantineTableHeadCellProps: {
-    //       align: "right",
-    //     },
-    //     mantineTableBodyCellProps: {
-    //       align: "right",
-    //     },
-    //   },
-    // },
-    // positionExpandColumn: "last",
-    // renderDetailPanel: ({ row }) => (
-    //   <RowDetail obj={row.original} ignoreFields={_table.sameAttributesSet} />
-    // ),
-    mantineSelectAllCheckboxProps: {
-      style: { padding: 0, backgroundColor: "red" },
-    },
-    // mantineTableHeadRowProps(props) {
-    //   console.log(props);
-    // },
-    mantineTableHeadCellProps: {
-      // style: { padding: 0 },
+    displayColumnDefOptions: {
+      "mrt-row-actions": {
+        size: 0,
+      },
+      "mrt-row-select": {
+        size: 0,
+        mantineTableHeadCellProps: {
+          sx: {
+            minWidth: 0,
+            width: 0,
+          },
+        },
+        mantineTableBodyCellProps: {
+          sx: {
+            minWidth: 0,
+            width: 0,
+          },
+        },
+      },
     },
     mantineTableBodyCellProps: {
       style: { padding: 0 },
@@ -358,10 +330,7 @@ export function useTableInfo(
   });
 
   return {
-    // columns,
-    // tableInfo,
     table,
-    // items,
     sameAttributes,
     sameAttributesSet,
     itemDrawer,
