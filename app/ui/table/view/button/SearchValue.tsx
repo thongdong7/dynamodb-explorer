@@ -1,7 +1,8 @@
 import { useNav } from "@/app/lib/hook/nav";
 import { SearchOutlined } from "@ant-design/icons";
-import { AttributeValue } from "@aws-sdk/client-dynamodb";
-import RecordValue, { getValue } from "../RecordValue";
+import { Button } from "antd";
+import { ReactNode } from "react";
+import { getValue } from "../RecordValue";
 
 export default function SearchValue({
   column,
@@ -11,7 +12,7 @@ export default function SearchValue({
     dataIndex: string;
     indexName?: string;
   };
-  value?: AttributeValue;
+  value?: ReactNode;
 }) {
   const { changeParams } = useNav();
   const { dataIndex, indexName } = column;
@@ -20,18 +21,20 @@ export default function SearchValue({
   }
 
   return (
-    <div
-      onClick={(e) => {
-        e.stopPropagation();
-        changeParams({
-          indexName,
-          pkField: dataIndex as string,
-          pkValue: getValue(value) as string,
-        });
-      }}
-      className="hover:underline text-sky-500 cursor-pointer flex gap-1"
-    >
-      <RecordValue value={value} /> <SearchOutlined />
+    <div className="text-sky-500">
+      {value}{" "}
+      <Button
+        type="text"
+        icon={<SearchOutlined />}
+        onClick={(e) => {
+          e.stopPropagation();
+          changeParams({
+            indexName,
+            pkField: dataIndex as string,
+            pkValue: getValue(value) as string,
+          });
+        }}
+      />
     </div>
   );
 }

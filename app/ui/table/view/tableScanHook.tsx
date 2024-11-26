@@ -11,11 +11,12 @@ import {
   MRT_TableInstance,
   useMantineReactTable,
 } from "mantine-react-table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CreateItemButton from "../../item/CreateItemButton";
 import { $id } from "../../single-table/common";
 import AttributesView from "./AttributesView";
 import useGSIIndexHook from "./hook/gsiIndexHook";
+import SearchValue from "./button/SearchValue";
 
 export type RecordType = Record<string, AttributeValue>;
 
@@ -86,6 +87,10 @@ export function useTableInfo(
     buildIDs(data.Items ?? [], tableInfo),
   );
 
+  useEffect(() => {
+    setItems(buildIDs(data.Items ?? [], tableInfo));
+  }, [data.Items]);
+
   if (items && items.length > 0) {
     Object.keys(items![0]).forEach((key) => {
       if (!keyFieldsSet.has(key)) {
@@ -110,6 +115,7 @@ export function useTableInfo(
           name: key,
           type,
           kind: "attribute",
+          indexName: undefined,
         });
       }
     });
@@ -129,11 +135,18 @@ export function useTableInfo(
             accessorKey: `${attr.name}`,
             header: attr.name,
             enableClickToCopy: true,
-            // mantineTableHeadCellProps: {
-            //   sx: {
-            //     padding: "0.75rem !important",
-            //   },
-            // },
+            Cell:
+              attr.kind === "pk" || attr.kind === "gsiPk"
+                ? ({ cell }) => (
+                    <SearchValue
+                      column={{
+                        dataIndex: attr.name,
+                        indexName: attr.indexName,
+                      }}
+                      value={cell.getValue<any>()}
+                    />
+                  )
+                : undefined,
           }) as MRT_ColumnDef<RecordWithID>,
       ),
     ...attributes.map((attr) => {

@@ -7,7 +7,7 @@ import { CloseOutlined } from "@ant-design/icons";
 import { ScanCommandOutput, TableDescription } from "@aws-sdk/client-dynamodb";
 import { Button, Space } from "antd";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MRTSingleTable from "../../single-table/MRTSingleTable";
 import ItemViewerDrawer from "./ItemViewerDrawer";
 import TablePagination from "./TablePagination";
@@ -30,12 +30,16 @@ export default function TableScan({
   const pkValue = searchParams.get("pkValue");
 
   const { changeParams } = useNav();
-  const [_data, setData] = useState(data);
+  // const [_data, setData] = useState(data);
+
+  // useEffect(() => {
+  //   setData(data);
+  // }, [data]);
 
   const [itemCount, setItemCount] = useState<number | undefined>(
     table.ItemCount,
   );
-  const myTable = useTableInfo(tableInfo, _data, {
+  const myTable = useTableInfo(tableInfo, data, {
     onCreateItem: (item) => {
       setItemCount((prev) => (prev ? prev + 1 : 1));
     },

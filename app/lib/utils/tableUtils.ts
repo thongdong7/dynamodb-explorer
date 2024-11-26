@@ -9,6 +9,7 @@ interface Field {
 
 export interface MyAttribute extends Field {
   kind: "pk" | "sk" | "gsiPk" | "gsiSk" | "attribute";
+  indexName: string | undefined;
 }
 
 interface GSIIndex {
@@ -48,6 +49,7 @@ export function getTableInfo(table: TableDescription): TableInfo {
       name: pk!,
       type: pkType!,
       kind: "pk",
+      indexName: undefined,
     },
   ];
 
@@ -78,6 +80,7 @@ export function getTableInfo(table: TableDescription): TableInfo {
       name: sk,
       type: skType!,
       kind: "sk",
+      indexName: undefined,
     });
   }
 
@@ -93,6 +96,7 @@ export function getTableInfo(table: TableDescription): TableInfo {
       name: pk!,
       type: pkType!,
       kind: "gsiPk",
+      indexName: gsi.IndexName,
     });
 
     let gsiInfo: GSIIndex = {
@@ -117,6 +121,7 @@ export function getTableInfo(table: TableDescription): TableInfo {
         name: sk,
         type: skType!,
         kind: "gsiSk",
+        indexName: gsi.IndexName,
       });
     }
 

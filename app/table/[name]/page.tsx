@@ -1,5 +1,6 @@
 import { describeTable } from "@/app/lib/actions/tables/describe";
 import {
+  queryDocTable,
   queryTable,
   scanDocTable,
   scanTable,
@@ -40,11 +41,11 @@ export default createPage()
     }) => {
       const dataFn =
         pkField && pkValue
-          ? queryTable(name, {
+          ? queryDocTable(name, {
               IndexName: indexName,
               KeyConditionExpression: `${pkField} = :pk`,
               ExpressionAttributeValues: {
-                ":pk": { S: pkValue },
+                ":pk": pkValue,
               },
               Limit: limit,
               ExclusiveStartKey: startKey ? JSON.parse(startKey) : undefined,

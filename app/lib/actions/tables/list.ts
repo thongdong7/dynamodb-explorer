@@ -11,7 +11,10 @@ import {
 import { getClient, getDocClient } from "../../utils/dynamodb/clientUtils";
 import {
   ScanCommand as DocScanCommand,
+  ScanCommandInput as DocScanCommandInput,
   ScanCommandOutput as DocScanCommandOutput,
+  QueryCommand as DocQueryCommand,
+  QueryCommandInput as DocQueryCommandInput,
 } from "@aws-sdk/lib-dynamodb";
 
 export const scanTable = async (
@@ -29,7 +32,7 @@ export const scanTable = async (
 
 export const scanDocTable = async (
   tableName: string,
-  options: Partial<Omit<ScanCommandInput, "TableName">> = {},
+  options: Partial<Omit<DocScanCommandInput, "TableName">> = {},
 ): Promise<DocScanCommandOutput> => {
   const command = new DocScanCommand({
     TableName: tableName,
@@ -49,6 +52,19 @@ export const queryTable = async (
     ...options,
   });
   const res = await getClient().send(command);
+
+  return res;
+};
+
+export const queryDocTable = async (
+  tableName: string,
+  options: Partial<Omit<DocQueryCommandInput, "TableName">> = {},
+): Promise<QueryCommandOutput> => {
+  const command = new DocQueryCommand({
+    TableName: tableName,
+    ...options,
+  });
+  const res = await getDocClient().send(command);
 
   return res;
 };
