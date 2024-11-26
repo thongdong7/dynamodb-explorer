@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/thongdong7/dynamodb-explorer/compare/v1.4.0...v1.5.0) (2024-11-26)
+
+
+### Features
+
+* Change favicon [#7](https://github.com/thongdong7/dynamodb-explorer/issues/7) ([68ed62d](https://github.com/thongdong7/dynamodb-explorer/commit/68ed62def3fdc6806f05c37fad7b86e5601852dd))
+
 # [1.4.0](https://github.com/thongdong7/dynamodb-explorer/compare/v1.3.0...v1.4.0) (2024-11-26)
 
 
