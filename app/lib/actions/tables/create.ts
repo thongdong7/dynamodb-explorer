@@ -19,6 +19,10 @@ export const createTableAPI = apiAction()
       RangeAttrType: z.enum(["S", "N", "B"]).optional(),
       ReadCapacityUnits: z.coerce.number().optional().default(1),
       WriteCapacityUnits: z.coerce.number().optional().default(1),
+      BillingMode: z
+        .enum(["PROVISIONED", "PAY_PER_REQUEST"])
+        .optional()
+        .default("PROVISIONED"),
       indexes: z
         .array(
           z.object({
@@ -47,6 +51,7 @@ export const createTableAPI = apiAction()
         RangeAttrType,
         ReadCapacityUnits,
         WriteCapacityUnits,
+        BillingMode,
         indexes,
       },
     }) => {
@@ -121,10 +126,14 @@ export const createTableAPI = apiAction()
           TableName,
           AttributeDefinitions: attrDefs,
           KeySchema: keySchema,
-          ProvisionedThroughput: {
-            ReadCapacityUnits,
-            WriteCapacityUnits,
-          },
+          ProvisionedThroughput:
+            BillingMode === "PROVISIONED"
+              ? {
+                  ReadCapacityUnits,
+                  WriteCapacityUnits,
+                }
+              : undefined,
+          BillingMode: BillingMode,
           GlobalSecondaryIndexes:
             GlobalSecondaryIndexes.length > 0
               ? GlobalSecondaryIndexes
