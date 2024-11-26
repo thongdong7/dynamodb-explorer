@@ -6,7 +6,8 @@
   },
   "files": [
     ".next",
-    "dist"
+    "dist",
+    "public"
   ],
   "scripts": {
     "dev": "DYNAMO_ENDPOINT=http://localhost:4566 next dev",
