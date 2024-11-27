@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/thongdong7/dynamodb-explorer/compare/v1.6.0...v1.6.1) (2024-11-27)
+
+
+### Bug Fixes
+
+* update readme ([142f29e](https://github.com/thongdong7/dynamodb-explorer/commit/142f29ec6e2e39b4364bf6a683e44787e7ad093e))
+
 # [1.6.0](https://github.com/thongdong7/dynamodb-explorer/compare/v1.5.2...v1.6.0) (2024-11-27)
 
 
