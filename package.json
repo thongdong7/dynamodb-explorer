@@ -15,6 +15,7 @@
     "start": "DYNAMO_ENDPOINT=http://localhost:4566 next start",
     "lint": "next lint"
   },
+  "repository": "https://github.com/thongdong7/dynamodb-explorer.git",
   "dependencies": {
     "@ant-design/nextjs-registry": "^1.0.1",
     "@aws-sdk/client-dynamodb": "^3.687.0",
