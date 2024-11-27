@@ -1,4 +1,4 @@
-> A GUI for DynamoDB at local support Single Table design
+> A GUI for local DynamoDB supports Single Table design
 
 ## Usage
 
