@@ -19,7 +19,6 @@
     "@ant-design/nextjs-registry": "^1.0.1",
     "@aws-sdk/client-dynamodb": "^3.687.0",
     "@aws-sdk/lib-dynamodb": "^3.692.0",
-    "@faker-js/faker": "^9.2.0",
     "@monaco-editor/react": "^4.6.0",
     "@uiw/react-json-view": "^2.0.0-alpha.30",
     "antd": "^5.22.0",
@@ -37,6 +36,7 @@
     "zod_utilz": "^0.8.3"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.2.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^13.0.0",
     "@semantic-release/exec": "^6.0.3",

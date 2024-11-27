@@ -19,8 +19,7 @@ export default function SearchValue({
   }
 
   return (
-    <div className="text-sky-500">
-      {value}{" "}
+    <div className="text-sky-500 text-nowrap">
       <Button
         type="text"
         icon={<SearchOutlined />}
@@ -32,7 +31,8 @@ export default function SearchValue({
             pkValue: value as string,
           });
         }}
-      />
+      />{" "}
+      {value}
     </div>
   );
 }

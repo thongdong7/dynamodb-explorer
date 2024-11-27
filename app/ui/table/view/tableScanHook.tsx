@@ -57,38 +57,51 @@ export interface TableScanHook {
   onCreateItem: (item: Record<string, any>) => void;
 }
 
-export function useTableInfo(
-  tableInfo: TableInfo,
-  data: ScanCommandOutput,
-  {
-    onCreateItem,
-    onDeleteItems,
-  }: {
-    onCreateItem: (item: Record<string, any>) => void;
-    onDeleteItems: (items: Record<string, any>[]) => void;
-  },
-): TableScanHook {
+function isAllSameAttributes(items: RecordWithID[]) {
+  if (items.length === 0) {
+    return true;
+  }
+  const firstItem = items[0];
+  for (let i = 1; i < items.length; i++) {
+    const item = items[i];
+    if (Object.keys(item).length !== Object.keys(firstItem).length) {
+      return false;
+    }
+    for (const key in item) {
+      if (!(key in firstItem)) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+function calculateColumns({
+  tableInfo,
+  items,
+  ignoreFields,
+}: {
+  tableInfo: TableInfo;
+  items: RecordWithID[];
+  ignoreFields: string[];
+}) {
+  const attributes: MyAttribute[] = [];
   const allFields = new Set<string>();
+  const allFields2 = new Set<string>();
   const keyFieldsSet = new Set<string>(
     tableInfo.attributes.map((attr) => attr.name),
   );
-  const attributes: MyAttribute[] = [];
-  const [items, setItems] = useState<RecordWithID[]>(
-    buildIDs(data.Items ?? [], tableInfo),
-  );
-
-  useEffect(() => {
-    setItems(buildIDs(data.Items ?? [], tableInfo));
-  }, [data.Items]);
 
   if (items && items.length > 0) {
     Object.keys(items![0]).forEach((key) => {
       if (!keyFieldsSet.has(key)) {
         allFields.add(key);
+        allFields2.add(key);
       }
     });
 
     items.slice(1).forEach((item) => {
+      Object.keys(item).forEach((key) => allFields2.add(key));
       // Remove fields that are not in the current item
       allFields.forEach((field) => {
         if (!(field in item)) {
@@ -114,31 +127,60 @@ export function useTableInfo(
   const allAttributes = tableInfo.attributes.concat(attributes);
   const sameAttributes = allAttributes;
   const sameAttributesSet = new Set(allAttributes.map((attr) => attr.name));
-  const gsiIndexes = useGSIIndexHook(tableInfo);
+
   const columns: MRT_ColumnDef<RecordWithID>[] = [
-    ...tableInfo.attributes
-      .filter((attr) => !gsiIndexes.ignoreFields.includes(attr.name))
-      .map(
-        (attr) =>
-          ({
-            accessorKey: `${attr.name}`,
-            header: attr.name,
-            enableClickToCopy: true,
-            Cell:
-              attr.kind === "pk" || attr.kind === "gsiPk"
-                ? ({ cell }) => (
-                    <SearchValue
-                      column={{
-                        dataIndex: attr.name,
-                        indexName: attr.indexName,
-                      }}
-                      value={cell.getValue<any>()}
-                    />
-                  )
-                : undefined,
-            size: 0,
-          }) as MRT_ColumnDef<RecordWithID>,
-      ),
+    ...tableInfo.attributes.map(
+      (attr) =>
+        ({
+          accessorKey: `${attr.name}`,
+          header: attr.name,
+          enableClickToCopy: true,
+          Cell:
+            attr.kind === "pk" || attr.kind === "gsiPk"
+              ? ({ cell }) => (
+                  <SearchValue
+                    column={{
+                      dataIndex: attr.name,
+                      indexName: attr.indexName,
+                    }}
+                    value={cell.getValue<any>()}
+                  />
+                )
+              : undefined,
+          size: 0,
+          mantineTableBodyCellProps({ cell, row, column }) {
+            if (attr.kind !== "pk") {
+              return {};
+            }
+            // return {};
+            const record = row.original;
+            const previousRecord =
+              row.index >= 1 ? items[row.index - 1] : undefined;
+            if (
+              previousRecord &&
+              previousRecord[attr.name] === record[attr.name]
+            ) {
+              return {
+                rowSpan: 0,
+              };
+            }
+
+            // Find the number of rows that have the same value
+            let rowSpan = 1;
+            for (let i = row.index + 1; i < items.length; i++) {
+              if (items[i][attr.name] === record[attr.name]) {
+                rowSpan++;
+              } else {
+                break;
+              }
+            }
+
+            return {
+              rowSpan,
+            };
+          },
+        }) as MRT_ColumnDef<RecordWithID>,
+    ),
     ...attributes.map((attr) => {
       return {
         accessorKey: `${attr.name}`,
@@ -156,6 +198,8 @@ export function useTableInfo(
           />
         );
       },
+      // getIsVisible: () => allFields2.size !== attributes.length,
+
       mantineTableHeadCellProps: {
         sx: {
           width: "100%",
@@ -172,6 +216,82 @@ export function useTableInfo(
       size: 360,
     },
   ];
+
+  return {
+    columns,
+    isAllSameAttributes: isAllSameAttributes(items),
+    sameAttributes,
+    sameAttributesSet,
+  };
+}
+
+export function useTableInfo(
+  tableInfo: TableInfo,
+  data: ScanCommandOutput,
+  {
+    onCreateItem,
+    onDeleteItems,
+  }: {
+    onCreateItem: (item: Record<string, any>) => void;
+    onDeleteItems: (items: Record<string, any>[]) => void;
+  },
+): TableScanHook {
+  const [items, setItems] = useState<RecordWithID[]>(
+    buildIDs(data.Items ?? [], tableInfo),
+  );
+
+  const gsiIndexes = useGSIIndexHook(tableInfo, {
+    onChange: (ignoreFields, showFields) => {
+      table.setColumnVisibility((prev) => {
+        const newColumnVisibility = { ...prev };
+        ignoreFields.forEach((field) => {
+          newColumnVisibility[field] = false;
+        });
+        showFields.forEach((field) => {
+          newColumnVisibility[field] = true;
+        });
+        return newColumnVisibility;
+      });
+    },
+  });
+  useEffect(() => {
+    setItems(buildIDs(data.Items ?? [], tableInfo));
+    table.reset();
+
+    const columnVisibility: Record<string, boolean> = {};
+    // Hide gsiIndexes.ignoreFields columns
+    tableInfo.attributes.forEach((attr) => {
+      columnVisibility[attr.name] = !gsiIndexes.ignoreFields.includes(
+        attr.name,
+      );
+    });
+    table.setColumnVisibility((prev) => ({ ...prev, ...columnVisibility }));
+  }, [data.Items]);
+
+  const [result, setResult] = useState<ReturnType<typeof calculateColumns>>(
+    calculateColumns({
+      tableInfo,
+      items,
+      ignoreFields: gsiIndexes.ignoreFields,
+    }),
+  );
+
+  useEffect(() => {
+    setResult(
+      calculateColumns({
+        tableInfo,
+        items,
+        ignoreFields: gsiIndexes.ignoreFields,
+      }),
+    );
+  }, [items, tableInfo]);
+
+  useEffect(() => {
+    table.setColumnVisibility((prev) => ({
+      ...prev,
+      Attributes: !result.isAllSameAttributes,
+    }));
+  }, [result.isAllSameAttributes]);
 
   const itemDrawer = useOpen();
   const [selectItem, setSelectItem] = useState<RecordWithID | undefined>(
@@ -211,7 +331,7 @@ export function useTableInfo(
 
   const { message } = App.useApp();
   const table = useMantineReactTable<RecordWithID>({
-    columns: columns,
+    columns: result.columns,
     data: items,
     enableBottomToolbar: false,
     enableColumnResizing: true,
@@ -301,8 +421,8 @@ export function useTableInfo(
     ),
     initialState: {
       density: "xs",
+      // columnVisibility,
     },
-
     displayColumnDefOptions: {
       "mrt-row-actions": {
         size: 0,
@@ -331,8 +451,8 @@ export function useTableInfo(
 
   return {
     table,
-    sameAttributes,
-    sameAttributesSet,
+    sameAttributes: result.sameAttributes,
+    sameAttributesSet: result.sameAttributesSet,
     itemDrawer,
     selectItem,
     setSelectItem,

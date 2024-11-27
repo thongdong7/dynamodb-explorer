@@ -3,12 +3,16 @@
 import { useNav } from "@/app/lib/hook/nav";
 import { humanFileSize } from "@/app/lib/utils/format";
 import { getTableInfo } from "@/app/lib/utils/tableUtils";
-import { CloseOutlined } from "@ant-design/icons";
+import { CloseCircleOutlined } from "@ant-design/icons";
 import { ScanCommandOutput, TableDescription } from "@aws-sdk/client-dynamodb";
 import { Button, Space } from "antd";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import MRTSingleTable from "../../single-table/MRTSingleTable";
+import SimpleTable from "../../single-table/simple/SimpleTable";
+import TableDisplayType, {
+  useTableDisplayType,
+} from "./button/TableDisplayType";
 import ItemViewerDrawer from "./ItemViewerDrawer";
 import TablePagination from "./TablePagination";
 import { useTableInfo } from "./tableScanHook";
@@ -23,18 +27,13 @@ export default function TableScan({
   if (!table) {
     return <div>Table not found</div>;
   }
-  const tableInfo = getTableInfo(table);
+  const tableInfo = useMemo(() => getTableInfo(table), [table]);
 
   const searchParams = useSearchParams();
   const pkField = searchParams.get("pkField");
   const pkValue = searchParams.get("pkValue");
 
   const { changeParams } = useNav();
-  // const [_data, setData] = useState(data);
-
-  // useEffect(() => {
-  //   setData(data);
-  // }, [data]);
 
   const [itemCount, setItemCount] = useState<number | undefined>(
     table.ItemCount,
@@ -48,33 +47,19 @@ export default function TableScan({
     },
   });
   const { itemDrawer, selectItem } = myTable;
+  const displayTypeProps = useTableDisplayType();
 
   return (
     <div className="flex flex-col gap-2">
-      {/* <SampleTable /> */}
       <div className="flex justify-between items-center">
         <div className="flex gap-2 items-center">
-          {/* {gsiIndexes.map((index) => (
-            <Checkbox
-              key={index.IndexName}
-              checked={!hideGSIIndexes[index.IndexName!]}
-              onChange={(e) =>
-                setHideGSIIndexes((prev) => ({
-                  ...prev,
-                  [index.IndexName!]: !e.target.checked,
-                }))
-              }
-            >
-              {index.IndexName}
-            </Checkbox>
-          ))} */}
           {pkField && pkValue && (
             <Button
               type="text"
               onClick={() =>
                 changeParams({ pkField: undefined, pkValue: undefined })
               }
-              icon={<CloseOutlined />}
+              icon={<CloseCircleOutlined />}
               iconPosition="end"
             >
               {pkField}: {pkValue}
@@ -82,6 +67,7 @@ export default function TableScan({
           )}
         </div>
         <Space>
+          <TableDisplayType {...displayTypeProps} />
           {itemCount && (
             <span>
               Count: <b>{itemCount.toLocaleString("en-US")}</b>
@@ -96,7 +82,11 @@ export default function TableScan({
         </Space>
       </div>
 
-      <MRTSingleTable table={myTable} />
+      {displayTypeProps.value === "Simple" ? (
+        <SimpleTable table={myTable} />
+      ) : (
+        <MRTSingleTable table={myTable} />
+      )}
 
       <ItemViewerDrawer
         item={selectItem}

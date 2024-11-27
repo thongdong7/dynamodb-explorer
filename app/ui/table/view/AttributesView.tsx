@@ -1,5 +1,6 @@
 import { AttributeValue } from "@aws-sdk/client-dynamodb";
 import RecordValue from "./RecordValue";
+import clsx from "clsx";
 
 export default function AttributesView({
   ignoreFields,
@@ -11,13 +12,18 @@ export default function AttributesView({
   const keys = Object.keys(item).filter((key) => !ignoreFields.has(key));
 
   return (
-    <table className="border-collapse table-auto w-full text-sm -mt-px -mb-px">
+    <table className="table-auto w-full text-sm -mt-px -mb-px">
       <thead>
         <tr>
-          {keys.map((key) => (
+          {keys.map((key, i) => (
             <th
               key={key}
-              className="border border-t-0 border-b-0 text-xs p-1 bg-slate-400"
+              className={clsx(
+                "border-t-0 border-b-0 text-xs p-1 bg-slate-400",
+                {
+                  "border-r": i !== keys.length - 1,
+                },
+              )}
             >
               <div className="w-44">{key}</div>
             </th>
@@ -26,10 +32,16 @@ export default function AttributesView({
       </thead>
       <tbody>
         <tr>
-          {keys.map((key) => (
+          {keys.map((key, i) => (
             <td
               key={key}
-              className="border px-1 max-w-44 text-ellipsis overflow-hidden"
+              className={clsx(
+                "px-1 max-w-44 text-ellipsis overflow-hidden",
+                {
+                  "border-r": i !== keys.length - 1,
+                },
+                itemTypeClass(item[key]),
+              )}
             >
               <RecordValue value={item[key]} />
             </td>
@@ -38,4 +50,17 @@ export default function AttributesView({
       </tbody>
     </table>
   );
+}
+
+function itemTypeClass(value: any) {
+  switch (typeof value) {
+    case "number":
+      return "text-right";
+    case "boolean":
+      return "text-yellow-500";
+    case "object":
+      return "text-red-500";
+    default:
+      return "";
+  }
 }

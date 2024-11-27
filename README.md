@@ -1,4 +1,4 @@
-> Another GUI for DynamoDB Local, dynalite, localstack etc.
+> A GUI for DynamoDB at local support Single Table design
 
 ## Usage
 
@@ -14,3 +14,7 @@ Options:
 - `-e <endpoint>` / `--dynamo-endpoint <endpoint>`: DynamoDB endpoint (default:
   "http://localhost:8000")
 - `-h` / `--help`: display help for command
+
+## Screenshot
+
+![DynamoDB Explorer Screenshot](./docs/screenshot.png)
