@@ -17,4 +17,4 @@ Options:
 
 ## Screenshot
 
-![DynamoDB Explorer Screenshot](./docs/screenshot.png)
+![DynamoDB Explorer Screenshot](https://github.com/thongdong7/dynamodb-explorer/raw/main/docs/screenshot.png)
