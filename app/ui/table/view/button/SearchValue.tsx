@@ -19,7 +19,7 @@ export default function SearchValue({
   }
 
   return (
-    <div className="text-sky-500">
+    <div className="text-sky-500 text-nowrap">
       <Button
         type="text"
         icon={<SearchOutlined />}

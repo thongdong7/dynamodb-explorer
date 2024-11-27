@@ -1,5 +1,5 @@
 import { TableInfo } from "@/app/lib/utils/tableUtils";
-import { Space, Checkbox } from "antd";
+import { Checkbox, Space } from "antd";
 import { useState } from "react";
 
 export default function useGSIIndexHook(
@@ -15,6 +15,7 @@ export default function useGSIIndexHook(
     ignoreFields: tableInfo.gsiIndexes
       .filter((gsi) => !selectedIndexes.includes(gsi.name))
       .flatMap((gsi) => [gsi.pk, ...(gsi.sk ? [gsi.sk] : [])]),
+    reset: () => setSelectedIndexes([]),
     render: () => {
       return (
         <Space>
