@@ -1,3 +1,18 @@
+# [1.6.0](https://github.com/thongdong7/dynamodb-explorer/compare/v1.5.2...v1.6.0) (2024-11-27)
+
+
+### Bug Fixes
+
+*  gsi columns show the end when toggle ([0caef65](https://github.com/thongdong7/dynamodb-explorer/commit/0caef650df86ca292e0acc073913de24867adddd))
+* add screenshot to readme ([4cc9cc9](https://github.com/thongdong7/dynamodb-explorer/commit/4cc9cc91ad5d339ba8d95df957b556e09665c762))
+* move search icon before the key value ([e4f9349](https://github.com/thongdong7/dynamodb-explorer/commit/e4f9349d63853299bfc7c353281936c30369d03b))
+* support BillingMode in create table api ([c4e4fad](https://github.com/thongdong7/dynamodb-explorer/commit/c4e4fad67526a78d06b46f26c4caa101760c65c0))
+
+
+### Features
+
+* Add basic single table ([462f72d](https://github.com/thongdong7/dynamodb-explorer/commit/462f72d2a9dee515a9c77a64bc8c2450bbe985e0))
+
 ## [1.5.2](https://github.com/thongdong7/dynamodb-explorer/compare/v1.5.1...v1.5.2) (2024-11-26)
 
 
