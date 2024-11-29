@@ -1,3 +1,10 @@
+## [1.6.2](https://github.com/thongdong7/dynamodb-explorer/compare/v1.6.1...v1.6.2) (2024-11-29)
+
+
+### Bug Fixes
+
+* cut long pk, sk field [#9](https://github.com/thongdong7/dynamodb-explorer/issues/9), sticky header [#10](https://github.com/thongdong7/dynamodb-explorer/issues/10) ([e4192a1](https://github.com/thongdong7/dynamodb-explorer/commit/e4192a13a0e21d597379a7a30b56acadcf48057d))
+
 ## [1.6.1](https://github.com/thongdong7/dynamodb-explorer/compare/v1.6.0...v1.6.1) (2024-11-27)
 
 
