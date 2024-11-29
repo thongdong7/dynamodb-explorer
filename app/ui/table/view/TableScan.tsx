@@ -83,7 +83,7 @@ export default function TableScan({
       </div>
 
       {displayTypeProps.value === "Simple" ? (
-        <SimpleTable table={myTable} />
+        <SimpleTable table={myTable} tableInfo={tableInfo} />
       ) : (
         <MRTSingleTable table={myTable} />
       )}

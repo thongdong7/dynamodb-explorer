@@ -1,26 +1,41 @@
-import { MRT_SelectCheckbox } from "mantine-react-table";
+import { TableInfo } from "@/app/lib/utils/tableUtils";
+import { Checkbox } from "antd";
+import clsx from "clsx";
 import { TableScanHook } from "../../table/view/tableScanHook";
 import Cell from "./Cell";
-import clsx from "clsx";
-import { Checkbox } from "antd";
+import { Resizer } from "./Resizer";
+import { useSimpleTable } from "./simpleTableHook";
 
 export default function SimpleTable({
   table: { table },
+  tableInfo,
 }: {
   table: TableScanHook;
+
+  tableInfo: TableInfo;
 }) {
+  const simpleTable = useSimpleTable({ table, tableInfo });
+
   return (
     <div className="flex flex-col gap-2">
       <div>{table.options.renderTopToolbarCustomActions?.({ table })}</div>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto h-[calc(100vh-220px)]">
         <table className="border">
           <thead>
-            <tr className="sticky top-0 z-10 bg-green-400 bg-opacity-90">
+            <tr className="sticky top-0 z-10 bg-green-400 border-t drop-shadow">
               {table.getVisibleFlatColumns().map((column, columnIndex) => (
                 <th
                   key={column.id}
-                  className={clsx("border drop-shadow text-white px-1 py-2")}
+                  className={clsx("border text-white px-1 py-2 relative group")}
                 >
+                  {simpleTable.isSupportCollapsed(column.id) && (
+                    <Resizer
+                      value={simpleTable.isCollapsed(column.id)}
+                      onChange={(value) =>
+                        simpleTable.setCollapse(column.id, value)
+                      }
+                    />
+                  )}
                   {columnIndex === 1 ? (
                     <Checkbox
                       checked={table.getIsAllPageRowsSelected()}
@@ -51,6 +66,7 @@ export default function SimpleTable({
                     cell={cell}
                     table={table}
                     renderedColumnIndex={renderedColumnIndex}
+                    simpleTable={simpleTable}
                   />
                 ))}
               </tr>

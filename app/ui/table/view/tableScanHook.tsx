@@ -213,7 +213,6 @@ function calculateColumns({
         },
       },
       enableResizing: true,
-      size: 360,
     },
   ];
 
