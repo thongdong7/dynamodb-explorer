@@ -1,3 +1,10 @@
+## [1.8.1](https://github.com/thongdong7/dynamodb-explorer/compare/v1.8.0...v1.8.1) (2024-11-30)
+
+
+### Bug Fixes
+
+* fit content for short cell ([0e26947](https://github.com/thongdong7/dynamodb-explorer/commit/0e26947944917af71f8b120d8ade4e1be0f79eac))
+
 # [1.8.0](https://github.com/thongdong7/dynamodb-explorer/compare/v1.7.1...v1.8.0) (2024-11-30)
 
 
