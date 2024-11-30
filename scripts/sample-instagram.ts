@@ -1,6 +1,5 @@
 import { putItemAPI } from "@/app/lib/actions/item/create";
 import { createTableAPI } from "@/app/lib/actions/tables/create";
-import { getClient } from "@/app/lib/utils/dynamodb/clientUtils";
 import { faker } from "@faker-js/faker";
 import { ulid } from "ulid";
 
@@ -12,27 +11,25 @@ function randomNumber(max: number) {
 }
 
 async function createSample() {
-  const client = getClient();
-
   // Create table
-  // await createTableAPI({
-  //   TableName: tableName,
-  //   HashAttrName: "PK",
-  //   HashAttrType: "S",
-  //   RangeAttrName: "SK",
-  //   RangeAttrType: "S",
-  //   BillingMode: "PAY_PER_REQUEST",
-  //   indexes: [
-  //     {
-  //       name: "GSI1",
-  //       type: "GSI",
-  //       HashAttrName: "GSI1PK",
-  //       HashAttrType: "S",
-  //       RangeAttrName: "GSI1SK",
-  //       RangeAttrType: "S",
-  //     },
-  //   ],
-  // });
+  await createTableAPI({
+    TableName: tableName,
+    HashAttrName: "PK",
+    HashAttrType: "S",
+    RangeAttrName: "SK",
+    RangeAttrType: "S",
+    BillingMode: "PAY_PER_REQUEST",
+    indexes: [
+      {
+        name: "GSI1",
+        type: "GSI",
+        HashAttrName: "GSI1PK",
+        HashAttrType: "S",
+        RangeAttrName: "GSI1SK",
+        RangeAttrType: "S",
+      },
+    ],
+  });
 
   // Create sample users
   const usernames: string[] = [];
