@@ -1,6 +1,5 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
-import clc from "cli-color";
 
 interface DynamoConfig {
   endpoint: string;
@@ -13,9 +12,7 @@ interface DynamoConfig {
 function loadDynamoEndpoint(dynamoConfig: DynamoConfig) {
   if (typeof process.env.DYNAMO_ENDPOINT === "string") {
     if (process.env.DYNAMO_ENDPOINT.indexOf(".amazonaws.com") > -1) {
-      console.error(
-        clc.red("dynamodb-explorer is only intended for local development"),
-      );
+      console.error("dynamodb-explorer is only intended for local development");
       process.exit(1);
     }
     dynamoConfig.endpoint = process.env.DYNAMO_ENDPOINT;
@@ -23,9 +20,7 @@ function loadDynamoEndpoint(dynamoConfig: DynamoConfig) {
       process.env.DYNAMO_ENDPOINT.indexOf("https://") === 0;
   } else {
     console.log(
-      clc.yellow(
-        "  DYNAMO_ENDPOINT is not defined (using default of http://localhost:8000)",
-      ),
+      "  DYNAMO_ENDPOINT is not defined (using default of http://localhost:8000)",
     );
   }
 }
@@ -44,20 +39,13 @@ export function loadDynamoConfig() {
     const dynamoConfig = {
       endpoint: "http://localhost:8000",
       sslEnabled: false,
-      region: "ap-southeast-1",
-      accessKeyId: "a",
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "a",
+      region: process.env.AWS_REGION ?? "us-east-1",
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? "key",
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? "secret",
     };
 
     loadDynamoEndpoint(dynamoConfig);
 
-    if (process.env.AWS_REGION) {
-      dynamoConfig.region = process.env.AWS_REGION;
-    }
-
-    if (process.env.AWS_ACCESS_KEY_ID) {
-      dynamoConfig.accessKeyId = process.env.AWS_ACCESS_KEY_ID;
-    }
     _config = dynamoConfig;
   }
 
