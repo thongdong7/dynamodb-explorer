@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/thongdong7/dynamodb-explorer/compare/v1.6.2...v1.7.0) (2024-11-30)
+
+
+### Features
+
+* Allow to select base index and GSI [#12](https://github.com/thongdong7/dynamodb-explorer/issues/12) ([87e0eee](https://github.com/thongdong7/dynamodb-explorer/commit/87e0eeeb76c94951393198bd8850e6eff4c27844))
+
 ## [1.6.2](https://github.com/thongdong7/dynamodb-explorer/compare/v1.6.1...v1.6.2) (2024-11-29)
 
 
