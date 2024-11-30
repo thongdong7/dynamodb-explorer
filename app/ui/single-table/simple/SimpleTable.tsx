@@ -59,7 +59,25 @@ export default function SimpleTable({
           <tbody>
             {table.getRowModel().rows.map((row) => (
               <tr key={row.id}>
-                {row.getVisibleCells().map((cell, renderedColumnIndex) => (
+                {table.getVisibleFlatColumns().map((column, columnIndex) => {
+                  const cell = row
+                    .getVisibleCells()
+                    .filter((cell) => cell.column.id === column.id)
+                    .pop();
+                  if (!cell) {
+                    return null;
+                  }
+                  return (
+                    <Cell
+                      key={cell.id}
+                      cell={cell}
+                      table={table}
+                      renderedColumnIndex={columnIndex}
+                      simpleTable={simpleTable}
+                    />
+                  );
+                })}
+                {/* {row.getVisibleCells().map((cell, renderedColumnIndex) => (
                   <Cell
                     key={cell.id}
                     cell={cell}
@@ -67,7 +85,7 @@ export default function SimpleTable({
                     renderedColumnIndex={renderedColumnIndex}
                     simpleTable={simpleTable}
                   />
-                ))}
+                ))} */}
               </tr>
             ))}
           </tbody>

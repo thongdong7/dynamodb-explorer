@@ -12,6 +12,7 @@ import CreateItemButton from "../../item/CreateItemButton";
 import { $id } from "../../single-table/common";
 import AttributesView from "./AttributesView";
 import SearchValue from "./button/SearchValue";
+import RecordValue from "./RecordValue";
 
 export type RecordType = Record<string, AttributeValue>;
 
@@ -61,6 +62,7 @@ function attrToColumn(
   attr: MyAttribute,
 ): MRT_ColumnDef<RecordWithID> {
   return {
+    id: attr.name,
     accessorKey: `${attr.name}`,
     header: attr.name,
     enableClickToCopy: true,
@@ -171,10 +173,12 @@ function calculateColumns({
     ...noneIndexAttributes.map((attr) => attrToColumn(items, attr)),
     ...attributes.map((attr) => {
       return {
+        id: attr.name,
         accessorKey: `${attr.name}`,
         header: attr.name,
         enableClickToCopy: true,
-      };
+        Cell: ({ cell }) => <RecordValue value={cell.getValue<any>()} />,
+      } as MRT_ColumnDef<RecordWithID>;
     }),
     {
       header: "Attributes",

@@ -1,5 +1,6 @@
 import { AttributeValue } from "@aws-sdk/client-dynamodb";
 import { ReactNode } from "react";
+import RecordValueString from "./record-value/RecordValueString";
 
 export default function RecordValue({
   value,
@@ -11,7 +12,7 @@ export default function RecordValue({
   }
 
   if (typeof value === "string") {
-    return value;
+    return <RecordValueString value={value} />;
   }
 
   if (value.S) {
