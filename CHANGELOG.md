@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/thongdong7/dynamodb-explorer/compare/v1.7.1...v1.8.0) (2024-11-30)
+
+
+### Features
+
+* support copy to clipboard and view long text ([786cc04](https://github.com/thongdong7/dynamodb-explorer/commit/786cc04aa9fad4dfb5a433ecad0c035c7b8f4ebf))
+
 ## [1.7.1](https://github.com/thongdong7/dynamodb-explorer/compare/v1.7.0...v1.7.1) (2024-11-30)
 
 
