@@ -60,7 +60,7 @@ export default function Cell<T extends Record<string, any>>({
       {renderedColumnIndex !== 1 ? (
         <div
           className={clsx({
-            "w-44 text-ellipsis overflow-hidden":
+            "max-w-44 text-ellipsis overflow-hidden":
               renderedColumnIndex > 1 && simpleTable.isCollapsed(column.id),
           })}
         >
