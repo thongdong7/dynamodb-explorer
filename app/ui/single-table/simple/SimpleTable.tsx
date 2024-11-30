@@ -11,10 +11,9 @@ export default function SimpleTable({
   tableInfo,
 }: {
   table: TableScanHook;
-
   tableInfo: TableInfo;
 }) {
-  const simpleTable = useSimpleTable({ table, tableInfo });
+  const simpleTable = useSimpleTable({ tableInfo });
 
   return (
     <div className="flex flex-col gap-2">

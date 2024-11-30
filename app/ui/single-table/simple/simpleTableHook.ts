@@ -1,17 +1,8 @@
 import { TableInfo } from "@/app/lib/utils/tableUtils";
-import { MRT_TableInstance } from "mantine-react-table";
 import { useState } from "react";
-import { RecordWithID } from "../../table/view/tableScanHook";
 
-export function useSimpleTable({
-  table,
-  tableInfo,
-}: {
-  table: MRT_TableInstance<RecordWithID>;
-  tableInfo: TableInfo;
-}) {
+export function useSimpleTable({ tableInfo }: { tableInfo: TableInfo }) {
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
-  // const [support];
 
   const attributeSet = new Set(tableInfo.attributes.map((attr) => attr.name));
 

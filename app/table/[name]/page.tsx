@@ -1,19 +1,14 @@
 import { describeTable } from "@/app/lib/actions/tables/describe";
-import {
-  queryDocTable,
-  queryTable,
-  scanDocTable,
-  scanTable,
-} from "@/app/lib/actions/tables/list";
+import { queryDocTable, scanDocTable } from "@/app/lib/actions/tables/list";
 import { createPage } from "@/app/lib/utils/createPageUtils";
+import { getTableInfo } from "@/app/lib/utils/tableUtils";
 import PageHeading from "@/app/ui/common/PageHeading";
 import PurgeTableButton from "@/app/ui/home/PurgeTableButton";
 import TableInfoButton from "@/app/ui/table/info/TableInfoButton";
-import Example from "@/app/ui/table/view/Example";
+import IndexSelector from "@/app/ui/table/view/select/IndexSelector";
 import TableScan from "@/app/ui/table/view/TableScan";
 import TableViewDeleteTableButton from "@/app/ui/table/view/TableViewDeleteTableButton";
-import { PlusOutlined } from "@ant-design/icons";
-import { Breadcrumb, Button, Space } from "antd";
+import { Breadcrumb, Space } from "antd";
 import { notFound } from "next/navigation";
 import { z } from "zod";
 
@@ -51,6 +46,7 @@ export default createPage()
               ExclusiveStartKey: startKey ? JSON.parse(startKey) : undefined,
             })
           : scanDocTable(name, {
+              IndexName: indexName,
               Limit: limit,
               ExclusiveStartKey: startKey ? JSON.parse(startKey) : undefined,
             });
@@ -59,12 +55,16 @@ export default createPage()
       if (!table) {
         notFound();
       }
+      const tableInfo = getTableInfo(table);
 
       return (
         <div className="flex flex-col gap-2 ">
           <Breadcrumb items={[{ title: "Home", href: "/" }, { title: name }]} />
           <div className="flex justify-between items-center">
-            <PageHeading value={name} />
+            <Space>
+              <PageHeading value={name} />
+              <IndexSelector names={tableInfo.gsiIndexes.map((i) => i.name)} />
+            </Space>
             <Space>
               <TableInfoButton table={table} />
 
@@ -72,8 +72,7 @@ export default createPage()
               <TableViewDeleteTableButton table={name} />
             </Space>
           </div>
-          {/* <Example /> */}
-          <TableScan table={table} data={data} />
+          <TableScan indexName={indexName} tableInfo={tableInfo} data={data} />
         </div>
       );
     },

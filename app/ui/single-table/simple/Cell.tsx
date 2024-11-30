@@ -51,18 +51,17 @@ export default function Cell<T extends Record<string, any>>({
       className={clsx("border relative group", {
         "px-1": column.columnDef.header !== "Attributes",
         "p-0 w-full": column.columnDef.header === "Attributes",
-        "text-nowrap": renderedColumnIndex <= 1,
+        "text-nowrap w-0": renderedColumnIndex <= 1,
         // "w-32 text-ellipsis overflow-hidden": collapse,
       })}
-      //   style={sx as any}
+      // style={sx as any}
       {...cellProps}
     >
       {renderedColumnIndex !== 1 ? (
         <div
           className={clsx({
-            "w-44 text-ellipsis overflow-hidden": simpleTable.isCollapsed(
-              column.id,
-            ),
+            "w-44 text-ellipsis overflow-hidden":
+              renderedColumnIndex > 1 && simpleTable.isCollapsed(column.id),
           })}
         >
           {simpleTable.isSupportCollapsed(column.id) && (

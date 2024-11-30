@@ -33,5 +33,6 @@ export function useNav() {
         ? parseInt(searchParams.get(name)!, 10)
         : defaultValue;
     },
+    searchParams,
   };
 }

@@ -1,21 +1,16 @@
 import { deleteItemsAPI } from "@/app/lib/actions/item/delete";
-import { useAction, UseActionHook } from "@/app/lib/hook/action";
-import { OpenHook, useOpen } from "@/app/lib/hook/open";
+import { useAction } from "@/app/lib/hook/action";
+import { useOpen } from "@/app/lib/hook/open";
 import { MyAttribute, TableInfo } from "@/app/lib/utils/tableUtils";
 import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import { AttributeValue, ScanCommandOutput } from "@aws-sdk/client-dynamodb";
 import { App, Button, Popconfirm } from "antd";
 import { isEqual } from "lodash";
-import {
-  MRT_ColumnDef,
-  MRT_TableInstance,
-  useMantineReactTable,
-} from "mantine-react-table";
+import { MRT_ColumnDef, useMantineReactTable } from "mantine-react-table";
 import { useEffect, useState } from "react";
 import CreateItemButton from "../../item/CreateItemButton";
 import { $id } from "../../single-table/common";
 import AttributesView from "./AttributesView";
-import useGSIIndexHook from "./hook/gsiIndexHook";
 import SearchValue from "./button/SearchValue";
 
 export type RecordType = Record<string, AttributeValue>;
@@ -40,22 +35,7 @@ function buildIDs(items: RecordType[], tableInfo: TableInfo): RecordWithID[] {
   return items.map((item) => buildID(item, tableInfo));
 }
 
-export interface TableScanHook {
-  sameAttributes: MyAttribute[];
-  sameAttributesSet: Set<string>;
-  itemDrawer: OpenHook;
-  selectItem: RecordWithID | undefined;
-  setSelectItem: (item: RecordWithID) => void;
-  deleteItemsAction: UseActionHook<
-    {
-      keys: Record<string, AttributeValue>[];
-    },
-    true
-  >;
-  table: MRT_TableInstance<RecordWithID>;
-  onUpdateItem: (item: Record<string, any>) => void;
-  onCreateItem: (item: Record<string, any>) => void;
-}
+export type TableScanHook = ReturnType<typeof useTableInfo>;
 
 function isAllSameAttributes(items: RecordWithID[]) {
   if (items.length === 0) {
@@ -76,14 +56,64 @@ function isAllSameAttributes(items: RecordWithID[]) {
   return true;
 }
 
+function attrToColumn(
+  items: RecordWithID[],
+  attr: MyAttribute,
+): MRT_ColumnDef<RecordWithID> {
+  return {
+    accessorKey: `${attr.name}`,
+    header: attr.name,
+    enableClickToCopy: true,
+    Cell:
+      attr.kind === "pk" || attr.kind === "gsiPk"
+        ? ({ cell }) => (
+            <SearchValue
+              column={{
+                dataIndex: attr.name,
+                indexName: attr.indexName,
+              }}
+              value={cell.getValue<any>()}
+            />
+          )
+        : undefined,
+    size: 0,
+    mantineTableBodyCellProps({ cell, row, column }) {
+      if (attr.kind !== "pk" && attr.kind !== "gsiPk") {
+        return {};
+      }
+      // return {};
+      const record = row.original;
+      const previousRecord = row.index >= 1 ? items[row.index - 1] : undefined;
+      if (previousRecord && previousRecord[attr.name] === record[attr.name]) {
+        return {
+          rowSpan: 0,
+        };
+      }
+
+      // Find the number of rows that have the same value
+      let rowSpan = 1;
+      for (let i = row.index + 1; i < items.length; i++) {
+        if (items[i][attr.name] === record[attr.name]) {
+          rowSpan++;
+        } else {
+          break;
+        }
+      }
+
+      return {
+        rowSpan,
+      };
+    },
+  };
+}
 function calculateColumns({
+  indexName,
   tableInfo,
   items,
-  ignoreFields,
 }: {
+  indexName?: string;
   tableInfo: TableInfo;
   items: RecordWithID[];
-  ignoreFields: string[];
 }) {
   const attributes: MyAttribute[] = [];
   const allFields = new Set<string>();
@@ -128,59 +158,17 @@ function calculateColumns({
   const sameAttributes = allAttributes;
   const sameAttributesSet = new Set(allAttributes.map((attr) => attr.name));
 
+  const indexAttributes = tableInfo.attributes.filter(
+    (attr) => attr.indexName === indexName,
+  );
+
+  const noneIndexAttributes = tableInfo.attributes.filter(
+    (attr) => attr.indexName !== indexName,
+  );
+
   const columns: MRT_ColumnDef<RecordWithID>[] = [
-    ...tableInfo.attributes.map(
-      (attr) =>
-        ({
-          accessorKey: `${attr.name}`,
-          header: attr.name,
-          enableClickToCopy: true,
-          Cell:
-            attr.kind === "pk" || attr.kind === "gsiPk"
-              ? ({ cell }) => (
-                  <SearchValue
-                    column={{
-                      dataIndex: attr.name,
-                      indexName: attr.indexName,
-                    }}
-                    value={cell.getValue<any>()}
-                  />
-                )
-              : undefined,
-          size: 0,
-          mantineTableBodyCellProps({ cell, row, column }) {
-            if (attr.kind !== "pk") {
-              return {};
-            }
-            // return {};
-            const record = row.original;
-            const previousRecord =
-              row.index >= 1 ? items[row.index - 1] : undefined;
-            if (
-              previousRecord &&
-              previousRecord[attr.name] === record[attr.name]
-            ) {
-              return {
-                rowSpan: 0,
-              };
-            }
-
-            // Find the number of rows that have the same value
-            let rowSpan = 1;
-            for (let i = row.index + 1; i < items.length; i++) {
-              if (items[i][attr.name] === record[attr.name]) {
-                rowSpan++;
-              } else {
-                break;
-              }
-            }
-
-            return {
-              rowSpan,
-            };
-          },
-        }) as MRT_ColumnDef<RecordWithID>,
-    ),
+    ...indexAttributes.map((attr) => attrToColumn(items, attr)),
+    ...noneIndexAttributes.map((attr) => attrToColumn(items, attr)),
     ...attributes.map((attr) => {
       return {
         accessorKey: `${attr.name}`,
@@ -228,59 +216,63 @@ export function useTableInfo(
   tableInfo: TableInfo,
   data: ScanCommandOutput,
   {
+    indexName,
     onCreateItem,
     onDeleteItems,
   }: {
+    indexName?: string;
     onCreateItem: (item: Record<string, any>) => void;
     onDeleteItems: (items: Record<string, any>[]) => void;
   },
-): TableScanHook {
+) {
   const [items, setItems] = useState<RecordWithID[]>(
     buildIDs(data.Items ?? [], tableInfo),
   );
 
-  const gsiIndexes = useGSIIndexHook(tableInfo, {
-    onChange: (ignoreFields, showFields) => {
-      table.setColumnVisibility((prev) => {
-        const newColumnVisibility = { ...prev };
-        ignoreFields.forEach((field) => {
-          newColumnVisibility[field] = false;
-        });
-        showFields.forEach((field) => {
-          newColumnVisibility[field] = true;
-        });
-        return newColumnVisibility;
-      });
-    },
-  });
+  // const gsiIndexes = useGSIIndexHook(tableInfo, {
+  //   onChange: (ignoreFields, showFields) => {
+  //     table.setColumnVisibility((prev) => {
+  //       const newColumnVisibility = { ...prev };
+  //       ignoreFields.forEach((field) => {
+  //         newColumnVisibility[field] = false;
+  //       });
+  //       showFields.forEach((field) => {
+  //         newColumnVisibility[field] = true;
+  //       });
+  //       return newColumnVisibility;
+  //     });
+  //   },
+  // });
   useEffect(() => {
     setItems(buildIDs(data.Items ?? [], tableInfo));
     table.reset();
 
-    const columnVisibility: Record<string, boolean> = {};
-    // Hide gsiIndexes.ignoreFields columns
-    tableInfo.attributes.forEach((attr) => {
-      columnVisibility[attr.name] = !gsiIndexes.ignoreFields.includes(
-        attr.name,
-      );
-    });
-    table.setColumnVisibility((prev) => ({ ...prev, ...columnVisibility }));
+    // const columnVisibility: Record<string, boolean> = {};
+    // // Hide gsiIndexes.ignoreFields columns
+    // tableInfo.attributes.forEach((attr) => {
+    //   columnVisibility[attr.name] = !gsiIndexes.ignoreFields.includes(
+    //     attr.name,
+    //   );
+    // });
+    // table.setColumnVisibility((prev) => ({ ...prev, ...columnVisibility }));
   }, [data.Items]);
 
   const [result, setResult] = useState<ReturnType<typeof calculateColumns>>(
     calculateColumns({
+      indexName,
       tableInfo,
       items,
-      ignoreFields: gsiIndexes.ignoreFields,
+      // ignoreFields: gsiIndexes.ignoreFields,
     }),
   );
 
   useEffect(() => {
     setResult(
       calculateColumns({
+        indexName,
         tableInfo,
         items,
-        ignoreFields: gsiIndexes.ignoreFields,
+        // ignoreFields: gsiIndexes.ignoreFields,
       }),
     );
   }, [items, tableInfo]);
@@ -405,7 +397,7 @@ export function useTableInfo(
               Delete items
             </Button>
           </Popconfirm>
-          {gsiIndexes.render()}
+          {/* {gsiIndexes.render()} */}
         </div>
         <div className="flex gap-2 items-center">
           <CreateItemButton
@@ -450,6 +442,7 @@ export function useTableInfo(
 
   return {
     table,
+    indexName,
     sameAttributes: result.sameAttributes,
     sameAttributesSet: result.sameAttributesSet,
     itemDrawer,
