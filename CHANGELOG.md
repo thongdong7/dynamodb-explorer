@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/thongdong7/dynamodb-explorer/compare/v1.7.0...v1.7.1) (2024-11-30)
+
+
+### Bug Fixes
+
+* default credential ([af7eb30](https://github.com/thongdong7/dynamodb-explorer/commit/af7eb309330c78167d4e9de1b891bb13362a9da9))
+
 # [1.7.0](https://github.com/thongdong7/dynamodb-explorer/compare/v1.6.2...v1.7.0) (2024-11-30)
 
 

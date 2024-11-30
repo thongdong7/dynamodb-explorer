@@ -1,6 +1,6 @@
 {
   "name": "@thongdong7/dynamodb-explorer",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "bin": {
     "dynamodb-explorer": "dist/dynamodb-explorer.js"
   },
